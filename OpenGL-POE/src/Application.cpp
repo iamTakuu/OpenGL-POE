@@ -1,6 +1,9 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 
@@ -86,6 +89,18 @@ bool InitWindow()
 
 int main()
 {
+	//GLM Test Stuff 
+	/*glm::vec4 vec(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::mat4 trans = glm::mat4(1.0f); // identity matrix
+
+	//trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f)); // Translation
+
+	//trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0)); // Rotation
+	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5)); // Scale
+	vec = trans * vec;
+	std::cout << vec.x << ' ' << vec.y << ' ' << vec.z << std::endl;
+	*/
+
 	if (InitWindow()) // If the window was not created
 		return -1;
 
