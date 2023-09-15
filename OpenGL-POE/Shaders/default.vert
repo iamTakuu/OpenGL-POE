@@ -8,12 +8,16 @@ out vec3 color;
 // Outputs the texture coordinate to the fragment shader
 out vec2 textCoord;
 
-uniform float scale; // uniform variable for the scale of the triangle
+// uniform variable for the scale of the triangle
+uniform float scale;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
 void main()
 {
-   gl_Position = vec4(aPos.x + aPos.x * scale, aPos.y + aPos.y * scale, aPos.z + aPos.z * scale, 1.0);
-   // Upside down triangle
-   //gl_Position = vec4(-aPos.x + aPos.x * -scale, -aPos.y + aPos.y * -scale, -aPos.z + aPos.z * -scale, 1.0);
+   gl_Position = projection * view * model * vec4(aPos, 1.0f);
    color = 1 - aColor;
    textCoord = aTexCoord;	
 }

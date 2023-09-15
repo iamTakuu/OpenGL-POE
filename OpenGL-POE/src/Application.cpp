@@ -26,9 +26,9 @@ void processInput(GLFWwindow *window)
 		glfwSetWindowShouldClose(window, true);
 	}
 }
-
-int width = 480;
-int height = 480;
+// Window dimensions
+const unsigned width = 480;
+const unsigned int height = 480;
 GLFWwindow* window;
 
 bool InitWindow()
@@ -62,38 +62,32 @@ bool InitWindow()
 
 }
 
+// Vertices coordinates
 GLfloat vertices[] =
-{
-	// X,	  Y,	 Z,		R,		G,		B		 U  ,   V
-	-0.5f,	-0.5f,	0.0f,	1.0f,	0.0f,	0.0f,	 0.0f, 0.0f,// Lower left vertex
-	-0.5f,   0.5f,  0.0f,	0.0f,	1.0f,	0.0f,    0.0f, 1.0f,// Upper left vertex
-	 0.5f,	 0.5f,	0.0f,	0.0f,	0.0f,	1.0f,    1.0f, 1.0f, // Upper right vertex
-	 0.5f,	-0.5f,	0.0f,	1.0f,	1.0f,	1.0f,    1.0f, 0.0f // Lower right vertex
+{ //     COORDINATES     /        COLORS      /		 U	   V  //
+	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
 };
 
 // Indices for vertices order
 GLuint indices[] =
 {
-	0, 1, 2, // Upper left triangle
-	0, 2, 3  // Lower right triangle
+	0, 1, 2,
+	0, 2, 3,
+	0, 1, 4,
+	1, 2, 4,
+	2, 3, 4,
+	3, 0, 4
 };
+
 
 
 
 int main()
 {
-	//GLM Test Stuff 
-	/*glm::vec4 vec(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::mat4 trans = glm::mat4(1.0f); // identity matrix
-
-	//trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f)); // Translation
-
-	//trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0)); // Rotation
-	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5)); // Scale
-	vec = trans * vec;
-	std::cout << vec.x << ' ' << vec.y << ' ' << vec.z << std::endl;
-	*/
-
 	if (InitWindow()) // If the window was not created
 		return -1;
 
@@ -116,44 +110,16 @@ int main()
 	VAO1.Unbind();	
 	VBO1.Unbind();
 	IBO1.Unbind();
-
+	// Set the uniform variable
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+	// Load the texture
+	Texture dummyTexture("Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	dummyTexture.texUnit(shaderProgram, "tex0", 0);
 
-	//// Texture stuff
-	//GLint widthImg, heightImg, numColCh;
-	//stbi_set_flip_vertically_on_load(true); // Flip the image on the y axis
-	//unsigned char* bytes = stbi_load("Textures/pop_cat.png", &widthImg, &heightImg, &numColCh, 0);
+	float rotation = 0.0f;
+	float prevTime = glfwGetTime();
 
-	//GLuint texture;	
-	//glGenTextures(1, &texture);
-	//glActiveTexture(GL_TEXTURE0); // Activate the texture unit first before binding texture
-	//glBindTexture(GL_TEXTURE_2D, texture); // Bind the texture to the texture unit
-
-	//// Set the texture wrapping/filtering options (on the currently bound texture object)
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // X axis
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // Y axis
-
-	//// float borderColor[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // Red border
-	//// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-
-	//// Load the image into the texture
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
-	//glGenerateMipmap(GL_TEXTURE_2D);
-
-	//stbi_image_free(bytes);
-	//glBindTexture(GL_TEXTURE_2D, 0); // Unbind the texture
-
-	//GLuint tex0Uni = glGetUniformLocation(shaderProgram.ID, "tex0");
-	//shaderProgram.Activate();
-	//glUniform1i(tex0Uni, 0); // Set the texture unit to 0
-
-	Texture popCat("Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	popCat.texUnit(shaderProgram, "tex0", 0);
-
-
+	glEnable(GL_DEPTH_TEST);
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -164,16 +130,48 @@ int main()
 		// Rendering commands here
 		// Clear the screen to a specific color
 		glClearColor(0.09f, 0.13f, 0.17f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
 		shaderProgram.Activate();
+
+		double currentTime = glfwGetTime();
+		if (currentTime - prevTime >= 1.0f / 60)
+		{
+			rotation += 0.5f;
+			prevTime = currentTime;
+		}
+
+
+
+		glm::mat4 model = glm::mat4(1.0f); // Make sure to initialize matrix to identity matrix first
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 projection = glm::mat4(1.0f);
+
+		// Rotate the model in the y axis
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		// 0.1f is near plane and 100.f is far plane (clipping)
+		// FOV is 45 degrees...needs to be in rads
+		projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.f);
+
+		// Get matrix's uniform location and set matrix
+		// Think of it as locking the model mat4 to the properties of the shader
+		// if you update model, it will update the shader
+		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		int projLoc = glGetUniformLocation(shaderProgram.ID, "projection");
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+
 		// Set the uniform variable. Can be done after shaderProgram.Activate().
 		glUniform1f(uniID, 0.5f); 
 
-		popCat.Bind();
+		dummyTexture.Bind();
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 		// Check events and swap the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -183,7 +181,7 @@ int main()
 	VBO1.Delete();
 	IBO1.Delete();
 	shaderProgram.Delete();
-	popCat.Delete();
+	dummyTexture.Delete();
 
 	glfwTerminate();
 	return 0;
