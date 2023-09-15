@@ -1,7 +1,15 @@
 #version 330 core
+out vec4 FragColor;
+
+in vec3 color;
+
+in vec2 textCoord;
+
+uniform sampler2D tex0;
+
+
 void main()
 {
-	gl_FragColor[0] = gl_FragCoord.x / 640.0;
-	gl_FragColor[1] = gl_FragCoord.y / 480.0;
-	gl_FragColor[2] = 0.8;
+	//FragColor = texture(tex0, textCoord) * vec4(color, 1.0);
+	FragColor = texture(tex0, textCoord);
 }

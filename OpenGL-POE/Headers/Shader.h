@@ -20,10 +20,12 @@ class Shader
 		GLuint ID;
 		Shader(const char* vertexPath, const char* fragmentPath);
 		Shader(const char* vertexCode, const char* fragmentCode, bool notFile);
-
+		// Activate the shader by calling glUseProgram
 		void Activate();
 		void Disgard();
 		void Delete();
+		// Utility function to check for shader compile errors
+		void compileErrors(unsigned int shader, const char* type);
 
 };
 
