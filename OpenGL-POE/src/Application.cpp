@@ -6,10 +6,15 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
+#include <vector>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "../Headers/Shader.h"
 #include "../Headers/VBO.h"
 #include "../Headers/VAO.h"
 #include "../Headers/IBO.h"
+
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -70,6 +75,91 @@ GLuint indices[] =
 	3, 2, 4, // Upper triangle
 	5, 4, 1 // Lower right triangle
 };
+
+//Terrain Generation
+void CreateTerrain()
+{
+	// load height map texture
+	int width, height, nChannels;
+	unsigned char* data = stbi_load("Height Map/Terrain.png",
+		&width, &height, &nChannels,
+		0);
+
+	// vertex generation
+	std::vector<float> vertices;
+	float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
+	for (unsigned int i = 0; i < height; i++)
+	{
+		for (unsigned int j = 0; j < width; j++)
+		{
+			// retrieve texel for (i,j) tex coord
+			unsigned char* texel = data + (j + width * i) * nChannels;
+			// raw height at coordinate
+			unsigned char y = texel[0];
+
+			// vertex
+			vertices.push_back(-height / 2.0f + i);        // v.x
+			vertices.push_back((int)y * yScale - yShift); // v.y
+			vertices.push_back(-width / 2.0f + j);        // v.z
+		}
+	}
+
+	stbi_image_free(data);
+
+	// index generation
+	std::vector<unsigned int> indices;
+	for (unsigned int i = 0; i < height - 1; i++)       // for each row a.k.a. each strip
+	{
+		for (unsigned int j = 0; j < width; j++)      // for each column
+		{
+			for (unsigned int k = 0; k < 2; k++)      // for each side of the strip
+			{
+				indices.push_back(j + width * (i + k));
+			}
+		}
+	}
+
+	const unsigned int NUM_STRIPS = height - 1;
+	const unsigned int NUM_VERTS_PER_STRIP = width * 2;
+
+	// register VAO
+	GLuint terrainVAO, terrainVBO, terrainEBO;
+	glGenVertexArrays(1, &terrainVAO);
+	glBindVertexArray(terrainVAO);
+
+	glGenBuffers(1, &terrainVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
+	glBufferData(GL_ARRAY_BUFFER,
+		vertices.size() * sizeof(float),       // size of vertices buffer
+		&vertices[0],                          // pointer to first element
+		GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glGenBuffers(1, &terrainEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+		indices.size() * sizeof(unsigned int), // size of indices buffer
+		&indices[0],                           // pointer to first element
+		GL_STATIC_DRAW);
+
+	// draw mesh
+	glBindVertexArray(terrainVAO);
+	// render the mesh triangle strip by triangle strip - each row at a time
+	for (unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
+	{
+		glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
+			NUM_VERTS_PER_STRIP, // number of indices to render
+			GL_UNSIGNED_INT,     // index data type
+			(void*)(sizeof(unsigned int)
+				* NUM_VERTS_PER_STRIP
+				* strip)); // offset to starting index
+	}
+}
+
+
 int main()
 {
 	//GLM Test Stuff 
@@ -86,22 +176,26 @@ int main()
 
 	if (InitWindow()) // If the window was not created
 		return -1;
+	
+	
+	glEnable(GL_DEPTH_TEST);
+	//// Create the shader program
+	Shader shaderProgram = Shader("Shaders/height.vert", "Shaders/height.frag");
 
-	// Create the shader program
-	Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
+	//// Create VAO, VBO, and IBO
+	//VAO VAO1;
+	//VAO1.Bind();
+	//// Create the VBO and link to vertices
+	//VBO VBO1(vertices, sizeof(vertices));
+	//// Create the IBO and link to indices
+	//IBO IBO1(indices, sizeof(indices));
 
-	// Create VAO, VBO, and IBO
-	VAO VAO1;
-	VAO1.Bind();
-	// Create the VBO and link to vertices
-	VBO VBO1(vertices, sizeof(vertices));
-	// Create the IBO and link to indices
-	IBO IBO1(indices, sizeof(indices));
+	//VAO1.LinkVBO(VBO1, 0);
+	//VAO1.Unbind();	
+	//VBO1.Unbind();
+	//IBO1.Unbind();
 
-	VAO1.LinkVBO(VBO1, 0);
-	VAO1.Unbind();	
-	VBO1.Unbind();
-	IBO1.Unbind();
+	CreateTerrain();
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -112,22 +206,21 @@ int main()
 		// Rendering commands here
 		// Clear the screen to a specific color
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shaderProgram.Activate();
-		// Bind the VAO so OpenGL knows to use it
-		VAO1.Bind();
-		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+	
+		
+		//// Draw primitives, number of indices, datatype of indices, index of indices
+		//glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 		// Check events and swap the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	
-	VAO1.Delete();
-	VBO1.Delete();
-	IBO1.Delete();
-	shaderProgram.Delete();
+	
+
+	
 
 	glfwTerminate();
 	return 0;

@@ -80,7 +80,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GFLW\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GFLW\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\stb</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -97,7 +97,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GFLW\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GFLW\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\stb</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,9 +139,13 @@
   <ItemGroup>
     <ClCompile Include="src\IBO.cpp" />
     <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Application.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\VAO.cpp" />
     <ClCompile Include="src\VBO.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Shader.h" />
@@ -150,6 +154,8 @@
     <ClInclude Include="Headers\IBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\height.frag" />
+    <None Include="Shaders\height.vert" />
     <None Include="Shaders\default.frag" />
     <None Include="Shaders\default.vert" />
   </ItemGroup>
