@@ -6,7 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <stb/stb_image.h>
-
+#include <vector>
 
 #include "../Headers/Shader.h"
 #include "../Headers/VBO.h"
@@ -63,6 +63,8 @@ bool InitWindow()
 
 }
 
+
+
 // Vertices coordinates
 GLfloat vertices[] =
 { //     COORDINATES     /        COLORS      /		 U	   V  //
@@ -85,6 +87,65 @@ GLuint indices[] =
 };
 
 
+std::vector<GLfloat> terrain_vertices;
+std::vector<GLuint> terrain_indices;
+
+// Function to load a heightmap image
+bool loadHeightmap(const char* filename, std::vector<unsigned char>& heightmap, int& width, int& height) {
+	// Load the image using your preferred image loading library
+	// For simplicity, let's assume you have a function for this
+	// For example, using stb_image.h:
+	int channels;
+	unsigned char* image = stbi_load(filename, &width, &height, &channels, 0);
+	if (!image) {
+		std::cerr << "Failed to load heightmap." << std::endl;
+		return false;
+	}
+
+	// Convert the image to grayscale and store it in the heightmap vector
+	heightmap.resize(width * height);
+	for (int i = 0; i < width * height; i++) {
+		// Convert RGB to grayscale by averaging channels
+		heightmap[i] = (image[i * channels] + image[i * channels + 1] + image[i * channels + 2]) / 3;
+	}
+
+	stbi_image_free(image);
+	return true;
+}
+
+// Function to generate the terrain mesh from the heightmap
+void generateTerrainMesh(const std::vector<unsigned char>& heightmap, int width, int height) {
+	// Calculate the vertex positions and store them in the 'vertices' vector
+	for (int z = 0; z < height; z++) {
+		for (int x = 0; x < width; x++) {
+			float xPos = static_cast<float>(x);
+			float zPos = static_cast<float>(z);
+			float yPos = static_cast<float>(heightmap[z * width + x]) / 10.0f; // Scale the height
+
+			terrain_vertices.push_back(xPos);
+			terrain_vertices.push_back(yPos);
+			terrain_vertices.push_back(zPos);
+		}
+	}
+
+	// Calculate the indices for rendering the terrain
+	for (int z = 0; z < height - 1; z++) {
+		for (int x = 0; x < width - 1; x++) {
+			GLuint topLeft = static_cast<GLuint>(z * width + x);
+			GLuint topRight = static_cast<GLuint>(z * width + x + 1);
+			GLuint bottomLeft = static_cast<GLuint>((z + 1) * width + x);
+			GLuint bottomRight = static_cast<GLuint>((z + 1) * width + x + 1);
+
+			terrain_indices.push_back(topLeft);
+			terrain_indices.push_back(bottomLeft);
+			terrain_indices.push_back(topRight);
+
+			terrain_indices.push_back(topRight);
+			terrain_indices.push_back(bottomLeft);
+			terrain_indices.push_back(bottomRight);
+		}
+	}
+}
 
 
 int main()
@@ -94,6 +155,9 @@ int main()
 
 	// Create the shader program
 	Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
+
+	
+
 
 	// Create VAO, VBO, and IBO
 	VAO VAO1;
@@ -122,6 +186,29 @@ int main()
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0.0f, 0.5f, 3.0f));
+	
+	// Load the heightmap and generate the terrain mesh
+		std::vector<unsigned char> heightmap;
+		int heightmapWidth, heightmapHeight;
+		if (!loadHeightmap("Height Map/Terrain.png", heightmap, heightmapWidth, heightmapHeight)) {
+			glfwTerminate();
+			return -1;
+		}
+		generateTerrainMesh(heightmap, heightmapWidth, heightmapHeight);
+
+		// Create vertex and index buffers for the terrain
+		GLuint vertexArray, vertexBuffer, indexBuffer;
+		glGenVertexArrays(1, &vertexArray);
+		glBindVertexArray(vertexArray);
+
+		glGenBuffers(1, &vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, terrain_vertices.size() * sizeof(GLfloat), terrain_vertices.data(), GL_STATIC_DRAW);
+
+		glGenBuffers(1, &indexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrain_indices.size() * sizeof(GLuint), terrain_indices.data(), GL_STATIC_DRAW);
+
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
