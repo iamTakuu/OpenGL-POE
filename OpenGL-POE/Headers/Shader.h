@@ -2,6 +2,9 @@
 #define SHADER_CLASS_H
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -24,7 +27,10 @@ class Shader
 		void Activate();
 		void Disgard();
 		void Delete();
-
+		void setMat4(const std::string& name, const glm::mat4& mat) const
+		{
+			glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+		}
 };
 
 #endif
