@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{2af8ffb5-2250-480f-82b0-5d709ddba115}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{3736645b-6506-4677-8141-fcd6f7754250}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -33,7 +36,10 @@
     <ClCompile Include="src\VAO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Terrain.cpp">
+    <ClCompile Include="src\stb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +56,7 @@
     <ClInclude Include="Headers\VAO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Camera.h">
+    <ClInclude Include="Headers\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -61,11 +67,10 @@
     <None Include="Shaders\default.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Shaders\height.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\height.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\pop_cat.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
