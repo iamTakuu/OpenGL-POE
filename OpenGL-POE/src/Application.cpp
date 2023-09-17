@@ -1,19 +1,10 @@
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <iostream>
-#include <stb/stb_image.h>
 
-
-#include "../Headers/Shader.h"
-#include "../Headers/VBO.h"
-#include "../Headers/VAO.h"
-#include "../Headers/IBO.h"
-#include "../Headers/Texture.h"
-#include "../Headers/Camera.h"
+#include "../Headers/Mesh.h"
+#include "../Headers/Board.h"
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -28,8 +19,8 @@ void processInput(GLFWwindow *window)
 	}
 }
 // Window dimensions
-const unsigned width = 480;
-const unsigned int height = 480;
+const unsigned width = 800;
+const unsigned int height = 800;
 GLFWwindow* window;
 
 bool InitWindow()
@@ -64,26 +55,51 @@ bool InitWindow()
 }
 
 // Vertices coordinates
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /		 U	   V  //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+Vertex floorVertices[] =
+{ //               COORDINATES           /            COLORS          /      TEXTURE COORDINATES    //
+	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f),  glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f),   glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f),   glm::vec2(1.0f, 0.0f)}
 };
 
 // Indices for vertices order
-GLuint indices[] =
+GLuint floorIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3
+};
+
+Vertex cubeVertices[] =
+{
+	//              COORDINATES           /            COLORS          /      TEXTURE COORDINATES    //
+	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(0.1f, -0.1f, -0.1f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(0.1f, -0.1f,  0.1f),  glm::vec3(1.0f, 1.0f, 1.0f)},
+
+	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(0.1f,  0.1f, -0.1f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(0.1f,  0.1f,  0.1f), glm::vec3(1.0f, 1.0f, 1.0f)}
+};
+
+
+GLuint cubeIndices[] =
 {
 	0, 1, 2,
 	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4
+	0, 4, 7,
+	0, 7, 3,
+	3, 7, 6,
+	3, 6, 2,
+	2, 6, 5,
+	2, 5, 1,
+	1, 5, 4,
+	1, 4, 0,
+	4, 5, 6,
+	4, 6, 7
 };
-
 
 
 
@@ -92,36 +108,40 @@ int main()
 	if (InitWindow()) // If the window was not created
 		return -1;
 
-	// Create the shader program
+	//// Variable to store textures required for the mesh
+	//Texture textures[] =
+	//{
+	//	// Leave textType blank for now, later we will use it to determine the type of texture.
+	//	// Like diffuse, specular, etc.
+	//	Texture("Textures/pop_cat.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE)
+	//};
+	//// Create the shader program
 	Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
+ //	
+	//std::vector <Vertex> verts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
+	//std::vector <GLuint> ind(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
+	//std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+	//// Create cube mesh
+	//Mesh cube(verts, ind, tex);
+	////cubeVertices[0] = { glm::vec3(-0.1f, -0.1f,  0.1f), glm::vec3(1.0f, 1.0f, 1.0f) };
+	//glm::vec3 cubePos = glm::vec3(-0.5f, 0.0f, 0.5f); // Position of the cube
+	//glm::mat4 cubeModel = glm::mat4(1.0f); // Make sure to initialize matrix to identity matrix first
+	//// Move model to the position of the cube
+	//cubeModel = glm::translate(cubeModel, cubePos);
 
-	// Create VAO, VBO, and IBO
-	VAO VAO1;
-	VAO1.Bind();
-	// Create the VBO and link to vertices
-	VBO VBO1(vertices, sizeof(vertices));
-	// Create the IBO and link to indices
-	IBO IBO1(indices, sizeof(indices));
-	// Takes in the layou, how many components per attrib (as in 3 for vert and col )
-	// type of components,
-	// stride, and offset
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0); // Vertex attributes
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Color attributes
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texture coord attributes
-	VAO1.Unbind();	
-	VBO1.Unbind();
-	IBO1.Unbind();
-
-	// Load the texture
-	Texture dummyTexture("Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-
-	dummyTexture.texUnit(shaderProgram, "tex0", 0); // tex0 is the uniform variable in the shader
+	//// Activate the shader program
+	//shaderProgram.Activate();
+	//// Get matrix's uniform location and set matrix
+	//// Think of it as locking the model mat4 to the properties of the shader
+	//// if you update model, it will update the shader
+	//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(cubeModel));
+	Board board(64, shaderProgram);
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
 	// Camera
-	Camera camera(width, height, glm::vec3(0.0f, 0.5f, 3.0f));
+	Camera camera(width, height, glm::vec3(0.0f, -75.0f, 50.0f));
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -131,12 +151,16 @@ int main()
 
 		// Rendering commands here
 		// Clear the screen to a specific color
-		glClearColor(0.09f, 0.13f, 0.17f, 1.0f);
+		//glClearColor(0.09f, 0.13f, 0.17f, 1.0f);
+		//Clear color to black (not really necessary actually since we are drawing a background image)
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
 
-		shaderProgram.Activate();
+
+
+		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 		camera.Input(window);
-		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+
 
 		/* glm::mat4 model = glm::mat4(1.0f); // Make sure to initialize matrix to identity matrix first
 		glm::mat4 view = glm::mat4(1.0f); // Make sure to initialize matrix to identity matrix first
@@ -159,22 +183,17 @@ int main()
 		int projLoc = glGetUniformLocation(shaderProgram.ID, "projection");
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)); */
 
+		// Draw the mesh
+		//cube.Draw(shaderProgram, camera);
+		board.Draw(shaderProgram,camera);
 
-		dummyTexture.Bind();
-		// Bind the VAO so OpenGL knows to use it
-		VAO1.Bind();
-		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
-		// Check events and swap the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	
-	VAO1.Delete();
-	VBO1.Delete();
-	IBO1.Delete();
+
 	shaderProgram.Delete();
-	dummyTexture.Delete();
+
 
 	glfwTerminate();
 	return 0;
