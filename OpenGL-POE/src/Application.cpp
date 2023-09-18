@@ -66,14 +66,12 @@ bool InitWindow()
 std::vector<GLfloat> terrain_vertices;
 std::vector<GLuint> terrain_indices;
 int nrChannels;
-unsigned char* image = NULL;
+unsigned char* image;
 
 // Function to load a heightmap image
 bool loadHeightmap(const char* filename, std::vector<unsigned char>& heightmap, int& width, int& height) {
-	// Load the image using your preferred image loading library
-	// For simplicity, let's assume you have a function for this
-	// For example, using stb_image.h:
-	
+	stbi_set_flip_vertically_on_load(true);
+	// Load the image using	
 	image = stbi_load(filename, &width, &height, &nrChannels, 0);
 	if (!image) {
 		std::cerr << "Failed to load heightmap." << std::endl;
@@ -102,12 +100,12 @@ void generateTerrainMesh(const std::vector<unsigned char>& heightmap, int width,
 	{
 		for (int j = 0; j < width; j++)
 		{
-			unsigned char* pixelOffset = image + (j + width * i) * bytePerPixel;
-			unsigned char y = pixelOffset[0];
+			/*unsigned char* pixelOffset = image + (j + width * i) * bytePerPixel;
+			unsigned char y = pixelOffset[0];*/
 
 			// vertex
 			terrain_vertices.push_back(-height / 2.0f + height * i / (float)height);   // vx
-			terrain_vertices.push_back((int)y * yScale - yShift);   // vy
+			//terrain_vertices.push_back((int)y * yScale - yShift);   // vy
 			terrain_vertices.push_back(-width / 2.0f + width * j / (float)width);   // vz
 		}
 	}
