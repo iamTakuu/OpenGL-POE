@@ -121,9 +121,6 @@ Board::Board(GLuint count, Shader& shaderProgram)
 	m_models[count] = glm::translate(m_models[count], m_positions[count]);
 }
 
-void Board::DrawBoarder() {
-
-}
 
 
 void Board::Draw(Shader& shaderProgram, Camera& camera)
