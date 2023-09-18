@@ -51,6 +51,9 @@
     <ClCompile Include="src\Board.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Shader.h">
@@ -77,6 +80,9 @@
     <ClInclude Include="Headers\Board.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\default.vert">
@@ -85,10 +91,18 @@
     <None Include="Shaders\default.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\height.frag" />
+    <None Include="Shaders\height.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\pop_cat.png">
       <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="HeightMap\Terrain.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="HeightMap\Terrain2.png">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

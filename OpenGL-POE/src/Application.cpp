@@ -5,6 +5,7 @@
 
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
+#include "../Headers/Terrain.h"
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -59,16 +60,17 @@ int main()
 	if (InitWindow()) // If the window was not created
 		return -1;
 
-	Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
-
+	Shader defaultShader = Shader("Shaders/default.vert", "Shaders/default.frag");
+	Shader terrainShader = Shader("Shaders/height.vert", "Shaders/height.frag");
 	// Create the mesh for the Chess Board
-	Board board(64, shaderProgram);
-
+	Board board(64, defaultShader);
+	Terrain terrain("HeightMap/Terrain2.png");
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0.0f, -75.0f, 50.0f));
+	terrain.Draw(terrainShader, camera);
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -85,18 +87,18 @@ int main()
 
 
 
-		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+		camera.updateMatrix(50.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Draw the mesh
 
-		board.Draw(shaderProgram,camera);
+		board.Draw(defaultShader,camera);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	
 
-	shaderProgram.Delete();
+	defaultShader.Delete();
 
 
 	glfwTerminate();

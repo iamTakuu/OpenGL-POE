@@ -5,12 +5,12 @@ out float Height;
 out vec3 Position;
 
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+// The camera matrix
+uniform mat4 camMatrix;
 
 void main()
 {
     Height = aPos.y;
-    Position = (view * model * vec4(aPos, 1.0)).xyz;
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    Position = (model * vec4(aPos, 1.0)).xyz;
+    gl_Position = model * camMatrix * vec4(aPos, 1.0);
 }

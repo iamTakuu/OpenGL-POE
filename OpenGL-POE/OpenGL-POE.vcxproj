@@ -143,6 +143,7 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\VAO.cpp" />
     <ClCompile Include="src\VBO.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Headers\Camera.h" />
     <ClInclude Include="Headers\Mesh.h" />
     <ClInclude Include="Headers\Shader.h" />
+    <ClInclude Include="Headers\Terrain.h" />
     <ClInclude Include="Headers\VAO.h" />
     <ClInclude Include="Headers\VBO.h" />
     <ClInclude Include="Headers\IBO.h" />
@@ -161,8 +163,12 @@
   <ItemGroup>
     <None Include="Shaders\default.frag" />
     <None Include="Shaders\default.vert" />
+    <None Include="Shaders\height.frag" />
+    <None Include="Shaders\height.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="HeightMap\Terrain.png" />
+    <Image Include="HeightMap\Terrain2.png" />
     <Image Include="Textures\pop_cat.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
