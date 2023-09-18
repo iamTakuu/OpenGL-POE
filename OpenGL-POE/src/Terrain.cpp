@@ -1,95 +1,59 @@
-//#define GLEW_STATIC
-//#include <GL/glew.h>
-//#include <GLFW/glfw3.h>
-//
-//#define STB_IMAGE_IMPLEMENTATION
-//#include "stb_image.h"
-//
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-//
-//#include <iostream>
-//#include <vector>
-//
-//
-//void CreateTerrain()
-//{
-//    // load height map texture
-//    int width, height, nChannels;
-//    unsigned char* data = stbi_load("Dependencies/Height Map/Terrain.png",
-//        &width, &height, &nChannels,
-//        0);
-//
-//    // vertex generation
-//    std::vector<float> vertices;
-//    float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
-//    for (unsigned int i = 0; i < height; i++)
-//    {
-//        for (unsigned int j = 0; j < width; j++)
-//        {
-//            // retrieve texel for (i,j) tex coord
-//            unsigned char* texel = data + (j + width * i) * nChannels;
-//            // raw height at coordinate
-//            unsigned char y = texel[0];
-//
-//            // vertex
-//            vertices.push_back(-height / 2.0f + i);        // v.x
-//            vertices.push_back((int)y * yScale - yShift); // v.y
-//            vertices.push_back(-width / 2.0f + j);        // v.z
-//        }
-//    }
-//
-//    stbi_image_free(data);
-//
-//    // index generation
-//    std::vector<unsigned int> indices;
-//    for (unsigned int i = 0; i < height - 1; i++)       // for each row a.k.a. each strip
-//    {
-//        for (unsigned int j = 0; j < width; j++)      // for each column
-//        {
-//            for (unsigned int k = 0; k < 2; k++)      // for each side of the strip
-//            {
-//                indices.push_back(j + width * (i + k));
-//            }
-//        }
-//    }
-//
-//    const unsigned int NUM_STRIPS = height - 1;
-//    const unsigned int NUM_VERTS_PER_STRIP = width * 2;
-//
-//    // register VAO
-//    GLuint terrainVAO, terrainVBO, terrainEBO;
-//    glGenVertexArrays(1, &terrainVAO);
-//    glBindVertexArray(terrainVAO);
-//
-//    glGenBuffers(1, &terrainVBO);
-//    glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
-//    glBufferData(GL_ARRAY_BUFFER,
-//        vertices.size() * sizeof(float),       // size of vertices buffer
-//        &vertices[0],                          // pointer to first element
-//        GL_STATIC_DRAW);
-//
-//    // position attribute
-//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//    glEnableVertexAttribArray(0);
-//
-//    glGenBuffers(1, &terrainEBO);
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-//        indices.size() * sizeof(unsigned int), // size of indices buffer
-//        &indices[0],                           // pointer to first element
-//        GL_STATIC_DRAW);
-//
-//    // draw mesh
-//    glBindVertexArray(terrainVAO);
-//    // render the mesh triangle strip by triangle strip - each row at a time
-//    for (unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
-//    {
-//        glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
-//            NUM_VERTS_PER_STRIP, // number of indices to render
-//            GL_UNSIGNED_INT,     // index data type
-//            (void*)(sizeof(unsigned int)
-//                * NUM_VERTS_PER_STRIP
-//                * strip)); // offset to starting index
-//    }
-//}
+#include "../Headers/Terrain.h"
+
+Terrain::Terrain(const char* img)
+{
+	// Stores the width, height, and the number of color channels of the image
+	int widthImg, heightImg, numColCh;
+	// Flips the image so it appears right side up
+	stbi_set_flip_vertically_on_load(true);
+	// Reads the image from a file and stores it in bytes
+	unsigned char* bytes = stbi_load(img, &widthImg, &heightImg, &numColCh, 0);
+
+	if (bytes)
+	{
+		std::cout << "Loaded heightmap of size " << heightImg << " x " << widthImg << std::endl;
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+
+	float yScale = 64.0f / 256.0f, yShift = 16.0f;
+	int rez = 1;
+	unsigned bytePerPixel = numColCh;
+
+	for (int i = 0; i < heightImg; i++)
+	{
+		for (int j = 0; j < widthImg; j++)
+		{
+			unsigned char* pixelOffset = bytes + (j + widthImg * i) * bytePerPixel;
+			unsigned char y = pixelOffset[0];
+
+			// vertex
+			terrain_vertices.push_back(-heightImg / 2.0f + heightImg * i / (float)heightImg);   // vx
+			terrain_vertices.push_back((int)y * yScale - yShift);   // vy
+			terrain_vertices.push_back(-widthImg / 2.0f + widthImg * j / (float)widthImg);   // vz
+		}
+	}
+	std::cout << "Loaded " << terrain_vertices.size() / 3 << " vertices" << std::endl;
+	stbi_image_free(bytes);
+
+	for (unsigned i = 0; i < heightImg - 1; i += rez)
+	{
+		for (unsigned j = 0; j < widthImg; j += rez)
+		{
+			for (unsigned k = 0; k < 2; k++)
+			{
+				terrain_indices.push_back(j + widthImg * (i + k * rez));
+			}
+		}
+	}
+	std::cout << "Loaded " << terrain_indices.size() << " indices" << std::endl;
+
+	const int numStrips = (heightImg - 1) / rez;
+	const int numTrisPerStrip = (widthImg / rez) * 2 - 2;
+	std::cout << "Created lattice of " << numStrips << " strips with " << numTrisPerStrip << " triangles each" << std::endl;
+	std::cout << "Created " << numStrips * numTrisPerStrip << " triangles total" << std::endl;
+
+
+}	
