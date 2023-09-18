@@ -3,16 +3,32 @@ layout (location = 0) in vec3 aPos; // the position variable has attribute posit
 layout (location = 1) in vec3 aColor; // the color variable has attribute position 1
 layout (location = 2) in vec2 aTexCoord; // the texture coordinate has attribute position 2
 
+
+// Outputs the current position for the Fragment Shader
+out vec3 crntPos;
 // Outputs the color to the fragment shader
 out vec3 color;
 // Outputs the texture coordinate to the fragment shader
-out vec2 textCoord;
+out vec2 texCoord;
 
+
+uniform vec3 camPos;
+// The camera matrix
 uniform mat4 camMatrix;
+// The model matrix
+uniform mat4 model;
 
 void main()
 {
-   gl_Position = camMatrix * vec4(aPos, 1.0f);
-   color = 1 - aColor;
-   textCoord = aTexCoord;	
+   // calculates current position
+	crntPos = vec3(model * vec4(aPos, 1.0f));
+	// Assigns the normal from the Vertex Data to "Normal"
+	//Normal = aNormal;
+	// Assigns the colors from the Vertex Data to "color"
+	color = aColor;
+	// Assigns the texture coordinates from the Vertex Data to "texCoord"
+	texCoord = aTexCoord;
+	
+	// Outputs the positions/coordinates of all vertices
+	gl_Position = camMatrix * model * vec4(crntPos, 1.0);
 }
