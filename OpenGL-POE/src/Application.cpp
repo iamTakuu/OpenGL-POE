@@ -63,30 +63,6 @@ bool InitWindow()
 
 }
 
-
-
-// Vertices coordinates
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /		 U	   V  //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
-};
-
-// Indices for vertices order
-GLuint indices[] =
-{
-	0, 1, 2,
-	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4
-};
-
-
 std::vector<GLfloat> terrain_vertices;
 std::vector<GLuint> terrain_indices;
 
@@ -113,9 +89,15 @@ bool loadHeightmap(const char* filename, std::vector<unsigned char>& heightmap, 
 	return true;
 }
 
+ 
+
+
 // Function to generate the terrain mesh from the heightmap
-void generateTerrainMesh(const std::vector<unsigned char>& heightmap, int width, int height) {
+void generateTerrainMesh(const std::vector<unsigned char>& heightmap, int width, int height, int numstrips, int numtrisPerStrip) {
 	// Calculate the vertex positions and store them in the 'vertices' vector
+	float yScale = 64.0f / 256.0f, yShift = 16.0f;
+	int rez = 1;
+	
 	for (int z = 0; z < height; z++) {
 		for (int x = 0; x < width; x++) {
 			float xPos = static_cast<float>(x);
@@ -128,65 +110,44 @@ void generateTerrainMesh(const std::vector<unsigned char>& heightmap, int width,
 		}
 	}
 
+	std::cout << "Loaded " << terrain_vertices.size() / 3 << " vertices" << std::endl;
+	
+
 	// Calculate the indices for rendering the terrain
-	for (int z = 0; z < height - 1; z++) {
-		for (int x = 0; x < width - 1; x++) {
-			GLuint topLeft = static_cast<GLuint>(z * width + x);
-			GLuint topRight = static_cast<GLuint>(z * width + x + 1);
-			GLuint bottomLeft = static_cast<GLuint>((z + 1) * width + x);
-			GLuint bottomRight = static_cast<GLuint>((z + 1) * width + x + 1);
-
-			terrain_indices.push_back(topLeft);
-			terrain_indices.push_back(bottomLeft);
-			terrain_indices.push_back(topRight);
-
-			terrain_indices.push_back(topRight);
-			terrain_indices.push_back(bottomLeft);
-			terrain_indices.push_back(bottomRight);
+	for (unsigned i = 0; i < height - 1; i += rez)
+	{
+		for (unsigned j = 0; j < width; j += rez)
+		{
+			for (unsigned k = 0; k < 2; k++)
+			{
+				terrain_indices.push_back(j + width * (i + k * rez));
+			}
 		}
 	}
+	std::cout << "Loaded " << terrain_indices.size() << " indices" << std::endl;
+
+	numstrips = (height - 1) / rez;
+	numtrisPerStrip == (width / rez) * 2 - 2;
+	std::cout << "Created lattice of " << numstrips << " strips with " << numtrisPerStrip << " triangles each" << std::endl;
+	std::cout << "Created " << numstrips * numtrisPerStrip << " triangles total" << std::endl;
 }
 
 
 int main()
 {
+	const int numStrips = 0;
+	const int numTrisPerStrip = 0;
+
 	if (InitWindow()) // If the window was not created
 		return -1;
-
-	// Create the shader program
-	Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
-
-	
-
-
-	// Create VAO, VBO, and IBO
-	VAO VAO1;
-	VAO1.Bind();
-	// Create the VBO and link to vertices
-	VBO VBO1(vertices, sizeof(vertices));
-	// Create the IBO and link to indices
-	IBO IBO1(indices, sizeof(indices));
-	// Takes in the layou, how many components per attrib (as in 3 for vert and col )
-	// type of components,
-	// stride, and offset
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0); // Vertex attributes
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Color attributes
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texture coord attributes
-	VAO1.Unbind();	
-	VBO1.Unbind();
-	IBO1.Unbind();
-
-	// Load the texture
-	Texture dummyTexture("Textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-
-	dummyTexture.texUnit(shaderProgram, "tex0", 0); // tex0 is the uniform variable in the shader
-
-	// Enable depth test
-	glEnable(GL_DEPTH_TEST);
-
 	// Camera
 	Camera camera(width, height, glm::vec3(0.0f, 0.5f, 3.0f));
 	
+	glEnable(GL_DEPTH_TEST);
+
+	// Create the shader program
+	Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
+		
 	// Load the heightmap and generate the terrain mesh
 		std::vector<unsigned char> heightmap;
 		int heightmapWidth, heightmapHeight;
@@ -194,20 +155,24 @@ int main()
 			glfwTerminate();
 			return -1;
 		}
-		generateTerrainMesh(heightmap, heightmapWidth, heightmapHeight);
+		generateTerrainMesh(heightmap, heightmapWidth, heightmapHeight, numStrips, numTrisPerStrip);
 
-		// Create vertex and index buffers for the terrain
-		GLuint vertexArray, vertexBuffer, indexBuffer;
-		glGenVertexArrays(1, &vertexArray);
-		glBindVertexArray(vertexArray);
+		// first, configure the cube's VAO (and terrainVBO + terrainIBO)
+		unsigned int terrainVAO, terrainVBO, terrainIBO;
+		glGenVertexArrays(1, &terrainVAO);
+		glBindVertexArray(terrainVAO);
 
-		glGenBuffers(1, &vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, terrain_vertices.size() * sizeof(GLfloat), terrain_vertices.data(), GL_STATIC_DRAW);
+		glGenBuffers(1, &terrainVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
+		glBufferData(GL_ARRAY_BUFFER, terrain_vertices.size() * sizeof(float), &terrain_vertices[0], GL_STATIC_DRAW);
 
-		glGenBuffers(1, &indexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrain_indices.size() * sizeof(GLuint), terrain_indices.data(), GL_STATIC_DRAW);
+		// position attribute
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+
+		glGenBuffers(1, &terrainIBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainIBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrain_indices.size() * sizeof(unsigned), &terrain_indices[0], GL_STATIC_DRAW);
 
 
 	// Loop until the user closes the window
@@ -224,44 +189,23 @@ int main()
 		shaderProgram.Activate();
 		camera.Input(window);
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+		
+		glBindVertexArray(terrainVAO);
+		//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		for (unsigned strip = 0; strip < numStrips; strip++)
+		{
+			glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
+				numTrisPerStrip + 2,   // number of indices to render
+				GL_UNSIGNED_INT,     // index data type
+				(void*)(sizeof(unsigned) * (numTrisPerStrip + 2) * strip)); // offset to starting index
+		}
 
-		/* glm::mat4 model = glm::mat4(1.0f); // Make sure to initialize matrix to identity matrix first
-		glm::mat4 view = glm::mat4(1.0f); // Make sure to initialize matrix to identity matrix first
-		glm::mat4 projection = glm::mat4(1.0f); // Make sure to initialize matrix to identity matrix first
-
-		// Rotate the model in the y axis
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		// 0.1f is near plane and 100.f is far plane (clipping)
-		// FOV is 45 degrees...needs to be in rads
-		projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.f);
-
-		// Get matrix's uniform location and set matrix
-		// Think of it as locking the model mat4 to the properties of the shader
-		// if you update model, it will update the shader
-		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		int projLoc = glGetUniformLocation(shaderProgram.ID, "projection");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection)); */
-
-
-		dummyTexture.Bind();
-		// Bind the VAO so OpenGL knows to use it
-		VAO1.Bind();
-		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 		// Check events and swap the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	
-	VAO1.Delete();
-	VBO1.Delete();
-	IBO1.Delete();
-	shaderProgram.Delete();
-	dummyTexture.Delete();
+	
 
 	glfwTerminate();
 	return 0;
