@@ -15,7 +15,7 @@ class Board
 
 
 	private:
-		void DrawBoarder();
+		//void DrawBoarder();
 		std::vector<Mesh> m_meshes;
 		std::vector<glm::vec3> m_positions;
 		std::vector<glm::mat4> m_models = { glm::mat4(1.0f)};

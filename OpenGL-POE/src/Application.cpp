@@ -64,13 +64,13 @@ int main()
 	Shader terrainShader = Shader("Shaders/height.vert", "Shaders/height.frag");
 	// Create the mesh for the Chess Board
 	Board board(64, defaultShader);
-	Terrain terrain("HeightMap/Terrain2.png");
+	//Terrain terrain("HeightMap/Terrain2.png");
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0.0f, -75.0f, 50.0f));
-	terrain.Draw(terrainShader, camera);
+	//terrain.Draw(terrainShader, camera);
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -87,7 +87,7 @@ int main()
 
 
 
-		camera.updateMatrix(50.0f, 0.1f, 100.0f);
+		camera.updateMatrix(35.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Draw the mesh
 

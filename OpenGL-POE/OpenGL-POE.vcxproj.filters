@@ -91,8 +91,12 @@
     <None Include="Shaders\default.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Shaders\height.frag" />
-    <None Include="Shaders\height.vert" />
+    <None Include="Shaders\height.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\height.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\pop_cat.png">
