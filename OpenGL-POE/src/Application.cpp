@@ -87,7 +87,7 @@ int main()
 
 
 
-		camera.updateMatrix(35.0f, 0.1f, 100.0f);
+		camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Draw the mesh
 

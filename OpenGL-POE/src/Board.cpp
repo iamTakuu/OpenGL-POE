@@ -1,30 +1,17 @@
 #include "../Headers/Board.h"
 
-const Vertex whiteVertices[] =
+const Vertex tileVertex[] =
 {
 	//              COORDINATES           /            COLORS          /      TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	Vertex{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, -1.0f,  1.0f),  glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)}, //Front
+	Vertex{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)}, //Back
+	Vertex{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)},//Back
+	Vertex{glm::vec3(1.0f, -1.0f,  1.0f),  glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)},//Front
 
-	Vertex{glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	Vertex{glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f,  1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f,  1.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f)}
-};
-const Vertex blackVertices[] =
-{
-	//              COORDINATES           /            COLORS          /      TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-	Vertex{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-	Vertex{glm::vec3(1.0f, -1.0f,  1.0f),  glm::vec3(0.0f, 0.0f, 0.0f)},
-
-	Vertex{glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-	Vertex{glm::vec3(1.0f,  1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-	Vertex{glm::vec3(1.0f,  1.0f,  1.0f), glm::vec3(0.0f, 0.0f, 0.0f)}
+	Vertex{glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)}, //Front
+	Vertex{glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},//Back
+	Vertex{glm::vec3(1.0f,  1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},//Back
+	Vertex{glm::vec3(1.0f,  1.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)}  //Front
 };
 
 const Vertex boarderVertices[] =
@@ -63,13 +50,15 @@ Board::Board(GLuint count, Shader& shaderProgram)
 	{
 		// Leave textType blank for now, later we will use it to determine the type of texture.
 		// Like diffuse, specular, etc.
-		Texture("Textures/pop_cat.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE)
+		//Texture("Textures/pop_cat.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE), // Text Index: 0
+		Texture("Textures/black.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE) // Text Index: 1
 	};
 	// Create the shader program
 	//Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
 
-	std::vector <Vertex> whiteVerts(whiteVertices, whiteVertices + sizeof(whiteVertices) / sizeof(Vertex));
-	std::vector <Vertex> blackVerts(blackVertices, blackVertices + sizeof(blackVertices) / sizeof(Vertex));
+	std::vector <Vertex> tileVerts(tileVertex, tileVertex + sizeof(tileVertex) / sizeof(Vertex));
+	//std::vector <Vertex> blackVerts(blackVertices, blackVertices + sizeof(blackVertices) / sizeof(Vertex));
 
 	std::vector <Vertex> boarderVerts(boarderVertices, boarderVertices + sizeof(boarderVertices) / sizeof(Vertex));
 
@@ -84,12 +73,12 @@ Board::Board(GLuint count, Shader& shaderProgram)
 		if (startWhite)
 		{
 			// Add the white mesh to the vector
-			m_meshes.push_back((i % 2 == 0) ? Mesh(whiteVerts, ind, tex) : Mesh(blackVerts, ind, tex));
+			m_meshes.push_back((i % 2 == 0) ? Mesh(tileVerts, ind, tex, 0) : Mesh(tileVerts, ind, tex, 1));
 		}
 		else
 		{
 			// Add the black mesh to the vector
-			m_meshes.push_back((i % 2 == 0) ? Mesh(blackVerts, ind, tex) : Mesh(whiteVerts, ind, tex));
+			m_meshes.push_back((i % 2 == 0) ? Mesh(tileVerts, ind, tex, 1) : Mesh(tileVerts, ind, tex, 0));
 		}
 
 
@@ -115,7 +104,7 @@ Board::Board(GLuint count, Shader& shaderProgram)
 	}
 
 	// Add the boarder mesh to the vector
-	m_meshes.push_back(Mesh(boarderVerts, ind, tex));
+	m_meshes.push_back(Mesh(boarderVerts, ind, tex, 0));
 	m_positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 	m_models.push_back(glm::mat4(1.0f));
 	m_models[count] = glm::translate(m_models[count], m_positions[count]);

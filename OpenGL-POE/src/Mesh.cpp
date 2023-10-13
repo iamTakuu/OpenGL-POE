@@ -2,11 +2,12 @@
 
 
 
-Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures)
+Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures, GLint texIndx)
 {
 	this->vertices = vertices;
 	this->indices = indices;
 	this->textures = textures;
+	this->texIndx = texIndx;
 
 	// Now that we have all the required data, set the vertex buffers and its attribute pointers.
 	SetupMesh();
@@ -35,8 +36,8 @@ void Mesh::Draw(Shader& shader, Camera& camera)
 	shader.Activate();
 	VAO.Bind();
 	// Bind appropriate textures
-	textures[0].texUnit(shader, "tex0", 0);
-	textures[0].Bind();
+	textures[texIndx].texUnit(shader, "tex0", 0);
+	textures[texIndx].Bind();
 
 	//Camera
 	glUniform3f(glGetUniformLocation(shader.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
