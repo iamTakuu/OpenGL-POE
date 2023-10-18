@@ -2,6 +2,10 @@
 
 
 
+Mesh::Mesh()
+{
+}
+
 Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures, GLint texIndx)
 {
 	this->vertices = vertices;

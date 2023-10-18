@@ -6,6 +6,7 @@
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
 #include "../Headers/Terrain.h"
+#include "../Headers/Sphere.h"
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -61,7 +62,7 @@ int main()
 		return -1;
 
 	Shader defaultShader = Shader("Shaders/default.vert", "Shaders/default.frag");
-	Shader terrainShader = Shader("Shaders/height.vert", "Shaders/height.frag");
+	//Shader terrainShader = Shader("Shaders/height.vert", "Shaders/height.frag");
 	// Create the mesh for the Chess Board
 	Board board(64, defaultShader);
 	//Terrain terrain("HeightMap/Terrain2.png");
@@ -71,6 +72,11 @@ int main()
 	// Camera
 	Camera camera(width, height, glm::vec3(0.0f, -75.0f, 50.0f));
 	//terrain.Draw(terrainShader, camera);
+
+	Sphere sphere(5.0f, 32, 32);
+	
+	sphere.m_model = glm::translate(sphere.m_model, glm::vec3(4.0f, 0.0f, 0.0f));
+
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -92,6 +98,8 @@ int main()
 		// Draw the mesh
 
 		board.Draw(defaultShader,camera);
+		sphere.Render(defaultShader, camera);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

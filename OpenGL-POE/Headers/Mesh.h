@@ -18,7 +18,7 @@ class Mesh
 		GLint texIndx;
 
 		VAO VAO;
-
+		Mesh();
 		// Constructor that loads the mesh's vertices, indices, and textures
 		Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures, GLint texIndx);
 
