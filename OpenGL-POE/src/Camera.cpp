@@ -8,18 +8,44 @@ Camera::Camera(int width, int height, glm::vec3 position)
 	this->height = height;
 	this->Position = position;
 
-	this->Orientation = glm::vec3(0.0f, 1.5f, -1.0f);
+	this->Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
+
+	//camMatrix = glm::rotate(camMatrix, glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
-void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
+/*void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
 {
-	// Makes camera look in the right direction from the right position
-	viewMatrix = glm::lookAt(Position, Position + Orientation, Up);
-	// Adds perspective to the scene
-	projectionMatrix = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
+	if (needsUpdate) {
+		
+		// Update view matrix
+		viewMatrix = glm::lookAt(Position, Position + Orientation, Up);
+        
+		// Update projection matrix
+		projectionMatrix = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
 
-	// Sets new camera matrix
-	camMatrix = projectionMatrix * viewMatrix;
+		// Multiply projection and view matrices
+		camMatrix = projectionMatrix * viewMatrix;
+
+		needsUpdate = false;
+	}
+}*/
+
+void Camera::initMatrix(float FOVdeg, float nearPlane, float farPlane)
+{		
+		// Update view matrix
+		viewMatrix = glm::lookAt(Position, Position + Orientation, Up);
+		
+		// Update projection matrix
+		projectionMatrix = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
+
+		// Multiply projection and view matrices
+		camMatrix = projectionMatrix * viewMatrix;
+}
+
+void Camera::rotateMatrix(float angle, glm::vec3 axis)
+{
+	// Rotates the camera matrix
+	camMatrix = glm::rotate(camMatrix, glm::radians(angle), axis);
 }
 
 void Camera::Matrix(Shader& shader, const char* uniform)
@@ -37,13 +63,27 @@ void Camera::Input(GLFWwindow* window)
 	/*if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		Position = camCenter;*/
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		camMatrix = glm::rotate(camMatrix, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		camMatrix = glm::translate(camMatrix, glm::vec3(0.1f, -0.1f, 0.0f));
+		needsUpdate = true;
+		camMatrix = glm::rotate(camMatrix, glm::radians(1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		//camMatrix = glm::translate(camMatrix, glm::vec3(0.1f, -0.1f, 0.0f));
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		camMatrix = camMatrix = glm::rotate(camMatrix, glm::radians(-45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		camMatrix = glm::translate(camMatrix, glm::vec3(-0.1f, -0.1f, 0.0f));
+		needsUpdate = true;
+		camMatrix = camMatrix = glm::rotate(camMatrix, glm::radians(-1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		//camMatrix = glm::translate(camMatrix, glm::vec3(-0.1f, -0.1f, 0.0f));
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		needsUpdate = true;
+		// Rotate the camera upwards
+		camMatrix = glm::rotate(camMatrix, glm::radians(-1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		needsUpdate = true;
+		// Rotate the camera upwards
+		camMatrix = glm::rotate(camMatrix, glm::radians(1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 		
 

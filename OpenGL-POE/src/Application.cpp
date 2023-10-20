@@ -7,6 +7,8 @@
 #include "../Headers/Board.h"
 #include "../Headers/Terrain.h"
 #include "../Headers/Sphere.h"
+#include "../Headers/Cylinder.h"
+#include "../Headers/Pawn.h"
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -61,23 +63,42 @@ int main()
 	if (InitWindow()) // If the window was not created
 		return -1;
 
-	Shader defaultShader = Shader("Shaders/default.vert", "Shaders/default.frag");
+	Shader default_shader = Shader("Shaders/default.vert", "Shaders/default.frag");
 	//Shader terrainShader = Shader("Shaders/height.vert", "Shaders/height.frag");
 	// Create the mesh for the Chess Board
-	Board board(64, defaultShader);
+	Board board(64, default_shader);
+	// Move the board to the center of the screen
+	board.parent_model = glm::translate(board.parent_model, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	
 	//Terrain terrain("HeightMap/Terrain2.png");
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
 	// Camera
-	Camera camera(width, height, glm::vec3(0.0f, -75.0f, 50.0f));
+	Camera camera(width, height, glm::vec3(-1.5f, 0.0f, 80.0f));
 	//terrain.Draw(terrainShader, camera);
+	camera.initMatrix(20.0f, 0.1f, 100.0f);
+	camera.rotateMatrix(-45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	Sphere sphere(5.0f, 32, 32);
-	
-	sphere.m_model = glm::translate(sphere.m_model, glm::vec3(4.0f, 0.0f, 0.0f));
+	// Sphere sphere(3.0f, 16, 16);
+	// Cylinder cylinder(8.0f, 2.0f,4.0f,8, 8);
+	//
+	// //Scale down the sphere and cylinder by 1/2
+	// sphere.m_model = glm::scale(sphere.m_model, glm::vec3(0.5f, 0.5f, 0.5f));
+	// cylinder.m_model = glm::scale(cylinder.m_model, glm::vec3(0.5f, 0.5f, 0.5f));
+	//
+	// cylinder.m_model = glm::translate(cylinder.m_model, glm::vec3(0.0f, 0.0f, 4.0f));
+	// sphere.m_model = glm::translate(sphere.m_model, glm::vec3(0.0f, 2.0f, 4.0f));
+	//
+	// //Rotate the cylinder by 90 degrees
+	// cylinder.m_model = glm::rotate(cylinder.m_model, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	// //sphere.m_model = glm::rotate(sphere.m_model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-
+	Pawn pawn(5.0f, 1.0f, 3.0f, 2.0f, 16, 16);
+	pawn.Position = glm::vec3(-8.0f, 0.0f, 5.0f);
+	pawn.Rotation = glm::rotate( pawn.Rotation, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	pawn.Scale = glm::vec3(0.6f, 0.6f, 0.6f);
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
 	{
@@ -93,12 +114,14 @@ int main()
 
 
 
-		camera.updateMatrix(20.0f, 0.1f, 100.0f);
+		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Draw the mesh
 
-		board.Draw(defaultShader,camera);
-		sphere.Render(defaultShader, camera);
+		pawn.Render(default_shader, camera);
+		board.Draw(default_shader,camera);
+		//sphere.Render(default_shader, camera);
+		//cylinder.Render(default_shader, camera);
 
 
 		glfwSwapBuffers(window);
@@ -106,7 +129,7 @@ int main()
 	}
 	
 
-	defaultShader.Delete();
+	default_shader.Delete();
 
 
 	glfwTerminate();

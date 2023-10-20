@@ -32,7 +32,10 @@ void Sphere::setVertices() {
             Vertex vertex{};
 
             vertex.Position = glm::vec3(x, y, z) * radius;
-            vertex.Color = glm::vec3(.2f, .0f, .4f);
+            vertex.Color = glm::vec3(1.0f, .0f, .0f);
+
+            vertex.TexCoords.x = U;
+            vertex.TexCoords.y = V;
 
             m_vertices.push_back(vertex);
         }
@@ -69,9 +72,9 @@ void Sphere::SetupMesh()
     m_mesh = Mesh(m_vertices, m_indices, tex, 0);
 }
 
-void Sphere::Render(Shader& shader, Camera& camera)
+void Sphere::Render(Shader& shader, Camera& camera, const glm::mat4& parent_model)
 {
     shader.Activate();
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(m_model));
+    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(parent_model * m_model));
 	m_mesh.Draw(shader, camera);
 }

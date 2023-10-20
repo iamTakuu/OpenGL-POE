@@ -15,7 +15,7 @@ class Camera
 {
 	public:
 		// Position of the camera
-		glm::vec3 Position;
+		glm::vec3 Position = glm::vec3(0.0f, 0.0f, 3.0f);
 		// Orientation of the camera
 		glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
 		// Up vector of the camera
@@ -27,6 +27,7 @@ class Camera
 		int height;
 
 		float speed = 0.1f;
+		bool needsUpdate;
 		//float sensitivity = 100.0f;
 
 		// Takes in the width and height of the window, and the position of the camera
@@ -40,6 +41,9 @@ class Camera
 
 		// Processes input received from any keyboard-like input system.
 		void Input(GLFWwindow* window);
+
+		void rotateMatrix(GLfloat angle, glm::vec3 axis);
+		void initMatrix(float FOVdeg, float nearPlane, float farPlane);
 
 	private:
 		// 3 Set points for the camera to move to

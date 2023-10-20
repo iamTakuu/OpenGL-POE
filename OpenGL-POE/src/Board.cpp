@@ -80,8 +80,8 @@ Board::Board(GLuint count, Shader& shaderProgram)
 			// Add the black mesh to the vector
 			m_meshes.push_back((i % 2 == 0) ? Mesh(tileVerts, ind, tex, 1) : Mesh(tileVerts, ind, tex, 0));
 		}
-
-
+		
+		
 		// Add the position and model matrix to the vectors
 		m_positions.push_back(pos);
 		m_models.push_back(glm::mat4(1.0f));
@@ -103,11 +103,15 @@ Board::Board(GLuint count, Shader& shaderProgram)
 		}
 	}
 
+
+	
 	// Add the boarder mesh to the vector
 	m_meshes.push_back(Mesh(boarderVerts, ind, tex, 0));
 	m_positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 	m_models.push_back(glm::mat4(1.0f));
 	m_models[count] = glm::translate(m_models[count], m_positions[count]);
+
+	
 }
 
 
@@ -116,8 +120,9 @@ void Board::Draw(Shader& shaderProgram, Camera& camera)
 {
 	for (size_t i = 0; i < m_meshes.size(); i++)
 	{
+		
 		shaderProgram.Activate();
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(m_models[i]));
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(parent_model * m_models[i]));
 
 		m_meshes[i].Draw(shaderProgram, camera);
 	}
