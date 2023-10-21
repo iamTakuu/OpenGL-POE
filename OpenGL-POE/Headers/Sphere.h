@@ -6,7 +6,7 @@
 class Sphere
 {
 public:
-	Sphere(GLfloat radius = 1.0f, GLint sectorCount = 36, GLint stackCount = 1);
+	Sphere(GLfloat radius = 1.0f, GLint sectorCount = 36, GLint stackCount = 1, const Texture& texture = Texture());
 
 	void Render(Shader& shader, Camera& camera);
 	Transform transform;
@@ -20,6 +20,8 @@ private:
 	GLint sectorCount;
 	GLint stackCount;
 	GLfloat radius;
+
+	Texture m_texture;
 
 	void setVertices();
 	void setIndices();

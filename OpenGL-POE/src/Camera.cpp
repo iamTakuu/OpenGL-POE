@@ -13,22 +13,22 @@ Camera::Camera(int width, int height, glm::vec3 position)
 	//camMatrix = glm::rotate(camMatrix, glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
-/*void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
-{
-	if (needsUpdate) {
-		
-		// Update view matrix
-		viewMatrix = glm::lookAt(Position, Position + Orientation, Up);
-        
-		// Update projection matrix
-		projectionMatrix = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
-
-		// Multiply projection and view matrices
-		camMatrix = projectionMatrix * viewMatrix;
-
-		needsUpdate = false;
-	}
-}*/
+// void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
+// {
+// 	if (needsUpdate) {
+// 		
+// 		// Update view matrix
+// 		viewMatrix = glm::lookAt(Position, Position + Orientation, Up);
+//         
+// 		// Update projection matrix
+// 		projectionMatrix = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
+//
+// 		// Multiply projection and view matrices
+// 		camMatrix = projectionMatrix * viewMatrix;
+//
+// 		needsUpdate = false;
+// 	}
+// }
 
 void Camera::initMatrix(float FOVdeg, float nearPlane, float farPlane)
 {		

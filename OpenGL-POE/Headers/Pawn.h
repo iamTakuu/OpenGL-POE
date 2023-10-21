@@ -5,19 +5,30 @@
 #include "Mesh.h"
 #include "Sphere.h"
 
+struct PawnProperties
+{
+    float cyHeight;
+    float cyTopRadius;
+    float cyBottomRadius;
+    float spRadius;
+    int sectorCount;
+    int stackCount;
+};
 class Pawn
 {
 public:
     Transform m_transform;
 
-    Pawn(GLfloat cylinderHeight = 1.0f, GLfloat cylinderTopRadius = 1.0f, GLfloat cylinderBottomRadius = 1.0f,  GLfloat sphereRadius = 1.0f,  GLint sectorCount = 36, GLint stackCount = 1);
+    Pawn(const PawnProperties& properties, bool isWhite);
 
     void Render(Shader& shader, Camera& camera);
 
-    void setNewPosition(glm::vec3 newPosition);
+    void setPosition(const glm::vec3& newPosition);
+    void setScale(const glm::vec3& newScale);
 
 
 private:
     Cylinder m_cylinder;
     Sphere m_sphere;
+    Texture m_texture;
 };

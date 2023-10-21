@@ -1,12 +1,13 @@
 ﻿#include "../Headers/Cylinder.h"
 
-Cylinder::Cylinder(GLfloat height, GLfloat topRadius, GLfloat bottomRadius, GLint sectorCount, GLint stackCount)
+Cylinder::Cylinder(GLfloat height, GLfloat topRadius, GLfloat bottomRadius, GLint sectorCount, GLint stackCount, const Texture& texture)
 {
     this->topRadius = topRadius;
     this->bottomRadius = bottomRadius;
     this->height = height;
     this->sectorCount = sectorCount;
     this->stackCount = stackCount;
+    this->m_texture = texture;
 
     setVertices();
     setIndices();
@@ -38,8 +39,7 @@ void Cylinder::setVertices() {
             Vertex vertex{};
 
             vertex.Position = glm::vec3(x, y, z);
-            vertex.Color = glm::vec3(0.2f, 0.0f, 0.4f);
-
+            vertex.Color = glm::vec3(1.0f, 1.0f, 1.0f);
             // Calculate UV coordinates
             vertex.TexCoords.x = U;
             vertex.TexCoords.y = V;
@@ -71,7 +71,7 @@ void Cylinder::SetupMesh()
     Texture texture = Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
     //std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
-    m_mesh = Mesh(m_vertices, m_indices, texture);
+    m_mesh = Mesh(m_vertices, m_indices, m_texture);
 }
 
 void Cylinder::Render(Shader& shader, Camera& camera)

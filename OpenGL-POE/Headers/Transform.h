@@ -32,6 +32,8 @@ public:
 
 	void setLocalScale(const glm::vec3& newScale);
 
+	void setParent(Transform* newParent);
+
 	const glm::vec3& getGlobalPosition() const;
 
 	const glm::vec3& getLocalPosition() const;

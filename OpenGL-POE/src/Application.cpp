@@ -5,10 +5,7 @@
 
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
-#include "../Headers/Cube.h"
 #include "../Headers/Terrain.h"
-#include "../Headers/Sphere.h"
-#include "../Headers/Cylinder.h"
 #include "../Headers/Pawn.h"
 
 // Callback function to resize the window
@@ -60,43 +57,51 @@ bool InitWindow()
 	return false;
 }
 
+
 int main()
 {
 	if (InitWindow()) // If the window was not created
 		return -1;
 
 	Shader default_shader = Shader("Shaders/default.vert", "Shaders/default.frag");
-	//Shader terrainShader = Shader("Shaders/height.vert", "Shaders/height.frag");
-	// Create the mesh for the Chess Board
-	Board board(64, default_shader);
-	// Move the board to the center of the screen
-	board.parent_model = glm::translate(board.parent_model, glm::vec3(0.0f, 0.0f, 0.0f));
-
+	Board board(64);
 	
-	//Terrain terrain("HeightMap/Terrain2.png");
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
 	// Camera
 	Camera camera(width, height, glm::vec3(-1.5f, 0.0f, 80.0f));
-	//terrain.Draw(terrainShader, camera);
 	camera.initMatrix(20.0f, 0.1f, 100.0f);
-	camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	
-	Pawn pawn(5.0f, 0.0f, 2.0f, 1.5f, 16, 16);
-	Pawn pawn2(5.0f, 0.0f, 2.0f, 1.5f, 16, 16);
-	pawn.setNewPosition(glm::vec3(-7.0f, 4.0f, 1.5f));
-	pawn2.setNewPosition(glm::vec3(-2.0f, 0.0f, 1.5f));
+	camera.rotateMatrix(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	Texture texture = Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
-	Cube cube(texture);
-	cube.transform.setLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	PawnProperties pawnProperties =
+		{
+		5.0f,
+		0.0f,
+		2.0f,
+		1.5f,
+		16,
+		16
+		};
+	// Create a vector of 8 pawns
+	std::vector<Pawn> white_pawns;
+	std::vector<Pawn> black_pawns;
+	//pawns.reserve(8);
+	for (size_t i = 0; i < 8; i++)
+	{
+		white_pawns.emplace_back(pawnProperties, true);
+		white_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
+		white_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, 2.0f));
 
-	//pawn2.set
-	//pawn.Position = glm::vec3(-8.0f, 0.0f, 5.0f);
-	//pawn.Rotation = glm::rotate( pawn.Rotation, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//pawn.Scale = glm::vec3(0.6f, 0.6f, 0.6f);
-	// Loop until the user closes the window
+		black_pawns.emplace_back(pawnProperties, false);
+		black_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
+		black_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, -4.5f));
+	}
+
+	//****** Good Starting Position ********
+	//pawn.setPosition(glm::vec3(-4.4f, 1.3f, 3.0f));
+
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// Input
@@ -108,28 +113,26 @@ int main()
 		//Clear color to black (not really necessary actually since we are drawing a background image)
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
-
 		
-
 		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Draw the mesh
-
-		pawn.Render(default_shader, camera);
-		pawn2.Render(default_shader, camera);
-		//board.Draw(default_shader,camera);
-		cube.Render(default_shader, camera);
+		board.Draw(default_shader, camera);
+		for (auto pawn : white_pawns)
+		{
+			pawn.Render(default_shader, camera);
+		}
+		for (auto pawn : black_pawns)
+		{
+			pawn.Render(default_shader, camera);
+		}
 		
-
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	
-
 	default_shader.Delete();
-
-
+	
 	glfwTerminate();
 	return 0;
 

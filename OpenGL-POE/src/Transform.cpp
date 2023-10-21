@@ -39,6 +39,11 @@ void Transform::setLocalScale(const glm::vec3& newScale)
     computeModelMatrix();
 }
 
+void Transform::setParent(Transform* newParent)
+{
+    m_parent = newParent;
+}
+
 const glm::vec3& Transform::getGlobalPosition() const
 {
     return m_modelMatrix[3];

@@ -20,9 +20,10 @@ class Camera
 		glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
 		// Up vector of the camera
 		glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
-		// Camera matrix
-		glm::mat4 camMatrix = glm::mat4(1.0f);
+		
 
+
+		
 		int width;
 		int height;
 
@@ -47,8 +48,12 @@ class Camera
 
 	private:
 		// 3 Set points for the camera to move to
+	// Camera matrix
+		glm::mat4 camMatrix = glm::mat4(1.0f);
 		glm::mat4 viewMatrix = glm::mat4(1.0f);
 		glm::mat4 projectionMatrix = glm::mat4(1.0f);
+	
+		glm::mat4 m_identity = glm::mat4(1.0f);
 
 };
 

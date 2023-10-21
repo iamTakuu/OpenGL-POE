@@ -1,41 +1,54 @@
 ﻿#include "../Headers/Pawn.h"
 
-
-
-Pawn::Pawn(GLfloat cylinderHeight, GLfloat cylinderTopRadius, GLfloat cylinderBottomRadius, GLfloat sphereRadius, GLint sectorCount, GLint stackCount)
+Pawn::Pawn(const PawnProperties& properties, const bool isWhite)
 {
-    m_cylinder = Cylinder(cylinderHeight, cylinderTopRadius, cylinderBottomRadius, sectorCount, stackCount);
-    m_sphere = Sphere(sphereRadius, sectorCount, stackCount);
-            
+    
+    if(isWhite)
+    {
+        m_texture = Texture("Textures/white-piece.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    }
+    else
+    {
+        m_texture = Texture("Textures/black-piece.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    }
+    // Create the cylinder and sphere
+    m_cylinder = Cylinder(properties.cyHeight, properties.cyTopRadius, properties.cyBottomRadius, properties.sectorCount, properties.stackCount, m_texture);
+    m_sphere = Sphere(properties.spRadius, properties.sectorCount, properties.stackCount, m_texture);
+
+    // Set the local transform
     m_cylinder.transform.setLocalRotation(glm::vec3(0.0f, 0.0f, 0.0f));
     m_cylinder.transform.setLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     m_sphere.transform.setLocalPosition(glm::vec3(0.0f, 1.0f, 0.0f ));
-    
-    m_sphere.transform.computeModelMatrix(); // pass in the parents transform matrix
-    m_cylinder.transform.computeModelMatrix(); // pass in the parents transform matrix
-
 
     // Set the parent transform
-    m_cylinder.transform.m_parent = &m_transform;
-    m_sphere.transform.m_parent = &m_transform;
-    m_transform.setLocalPosition(glm::vec3(-3.0f, 4.0f, 8.0f));
-    
-    m_sphere.transform.computeModelMatrix(); // pass in the parents transform matrix
-    m_cylinder.transform.computeModelMatrix(); // pass in the parents transform matrix
-    
+    m_cylinder.transform.setParent(&m_transform);
+    m_sphere.transform.setParent(&m_transform);
+
+    //m_transform.setLocalRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+    // Compute the model matrix
+    m_sphere.transform.computeModelMatrix(); 
+    m_cylinder.transform.computeModelMatrix();
 }
 
-auto Pawn::Render(Shader& shader, Camera& camera) -> void
+void Pawn::Render(Shader& shader, Camera& camera)
 {
     m_cylinder.Render(shader, camera);
     m_sphere.Render(shader, camera);
 }
 
-void Pawn::setNewPosition(glm::vec3 newPosition)
+void Pawn::setPosition(const glm::vec3& newPosition)
 {
     m_transform.setLocalPosition(newPosition);
 
-    m_sphere.transform.computeModelMatrix(); // pass in the parents transform matrix
-    m_cylinder.transform.computeModelMatrix(); // pass in the parents transform matrix
+    m_sphere.transform.computeModelMatrix(); 
+    m_cylinder.transform.computeModelMatrix();
     
+}
+
+void Pawn::setScale(const glm::vec3& newScale)
+{
+    m_transform.setLocalScale(newScale);
+
+    m_sphere.transform.computeModelMatrix(); 
+    m_cylinder.transform.computeModelMatrix();
 }
