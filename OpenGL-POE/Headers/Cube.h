@@ -5,6 +5,7 @@
 class Cube
 {
 public:
+    Cube();
     // Creates a cube with the given texture. Is always 1x1x1 in size.
     Cube(const Texture& texture);
     void Render(Shader& shader, Camera& camera);

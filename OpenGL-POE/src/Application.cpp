@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "../Headers/Bishop.h"
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
 #include "../Headers/Terrain.h"
@@ -74,7 +75,7 @@ int main()
 	camera.initMatrix(20.0f, 0.1f, 100.0f);
 	camera.rotateMatrix(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	PawnProperties pawnProperties =
+	PawnProps pawnProperties =
 		{
 		5.0f,
 		0.0f,
@@ -97,11 +98,26 @@ int main()
 		black_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
 		black_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, -4.5f));
 	}
-
+		
 	//****** Good Starting Position ********
 	//pawn.setPosition(glm::vec3(-4.4f, 1.3f, 3.0f));
 
 
+	BishopProps bishopProperties =
+	{
+		1.8f,
+		2.5f,
+		9.0f,
+		1.0f,
+		3.0f,
+		1.0f,
+		3.5f,
+		16,
+		16
+	};
+	Bishop white_bishop(bishopProperties, true);
+	white_bishop.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	white_bishop.setPosition(glm::vec3(-4.8f, .8f, -3.0f));
 	while (!glfwWindowShouldClose(window))
 	{
 		// Input
@@ -126,6 +142,7 @@ int main()
 		{
 			pawn.Render(default_shader, camera);
 		}
+		white_bishop.Render(default_shader, camera);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();

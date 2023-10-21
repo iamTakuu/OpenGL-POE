@@ -6,7 +6,8 @@
 class Cylinder
 {
 public:
-    Cylinder(GLfloat height = 1.0f, GLfloat topRadius = 1.0f, GLfloat bottomRadius = 1.0f, GLint sectorCount = 36, GLint stackCount = 1, const Texture& texture = Texture());
+    Cylinder(GLfloat height = 1.0f, GLfloat topRadius = 1.0f, GLfloat bottomRadius = 1.0f, GLint sectorCount = 36,
+             GLint stackCount = 1, const Texture& texture = Texture());
 
     void Render(Shader& shader, Camera& camera);
     //Transform* m_parent = nullptr;

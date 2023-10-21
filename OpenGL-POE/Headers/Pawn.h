@@ -5,7 +5,7 @@
 #include "Mesh.h"
 #include "Sphere.h"
 
-struct PawnProperties
+struct PawnProps
 {
     float cyHeight;
     float cyTopRadius;
@@ -19,7 +19,7 @@ class Pawn
 public:
     Transform m_transform;
 
-    Pawn(const PawnProperties& properties, bool isWhite);
+    Pawn(const PawnProps& properties, bool isWhite);
 
     void Render(Shader& shader, Camera& camera);
 

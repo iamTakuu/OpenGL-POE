@@ -1,6 +1,6 @@
 ﻿#include "../Headers/Pawn.h"
 
-Pawn::Pawn(const PawnProperties& properties, const bool isWhite)
+Pawn::Pawn(const PawnProps& properties, const bool isWhite)
 {
     
     if(isWhite)
@@ -12,7 +12,8 @@ Pawn::Pawn(const PawnProperties& properties, const bool isWhite)
         m_texture = Texture("Textures/black-piece.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE);
     }
     // Create the cylinder and sphere
-    m_cylinder = Cylinder(properties.cyHeight, properties.cyTopRadius, properties.cyBottomRadius, properties.sectorCount, properties.stackCount, m_texture);
+    m_cylinder = Cylinder(properties.cyHeight, properties.cyTopRadius, properties.cyBottomRadius,
+                          properties.sectorCount, properties.stackCount, m_texture);
     m_sphere = Sphere(properties.spRadius, properties.sectorCount, properties.stackCount, m_texture);
 
     // Set the local transform

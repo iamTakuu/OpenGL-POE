@@ -1,5 +1,9 @@
 ﻿#include "../Headers/Cube.h"
 
+Cube::Cube()
+{
+}
+
 Cube::Cube(const Texture& texture)
 {
     m_texture = texture;
