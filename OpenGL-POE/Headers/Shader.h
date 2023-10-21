@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <cerrno>
+#include <glm/fwd.hpp>
 
 
 std::string get_file_contents(const char* filename);
@@ -20,8 +21,10 @@ class Shader
 		GLuint ID;
 		Shader(const char* vertexPath, const char* fragmentPath);
 		Shader(const char* vertexCode, const char* fragmentCode, bool notFile);
+		
 		// Activate the shader by calling glUseProgram
 		void Activate();
+		void setMat4(const GLchar* name, const glm::mat4& mat) const;
 		void Disgard();
 		void Delete();
 		// Utility function to check for shader compile errors

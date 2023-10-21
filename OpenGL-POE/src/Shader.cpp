@@ -1,5 +1,7 @@
 ﻿#include "../Headers/Shader.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 /*Coder, I. (2011). Insane Coding: How to read in a file in C++. [online] Insane Coding.
 Available at: https://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html 
 [Accessed 10 Sep. 2023].
@@ -100,6 +102,12 @@ void Shader::Disgard()
 {
 	glDeleteProgram(ID);
 }
+void Shader::setMat4(const GLchar* name, const glm::mat4& mat) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+
 void Shader::Delete()
 {
 	glDeleteProgram(ID);

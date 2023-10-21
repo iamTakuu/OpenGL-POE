@@ -5,6 +5,7 @@
 
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
+#include "../Headers/Cube.h"
 #include "../Headers/Terrain.h"
 #include "../Headers/Sphere.h"
 #include "../Headers/Cylinder.h"
@@ -40,22 +41,23 @@ bool InitWindow()
 
 
 	window = glfwCreateWindow(width, height, "POE - Chess Demo", NULL, NULL);
-	if (window == NULL)
+	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
-		return -1;
+		return true;
 	}
 	glfwMakeContextCurrent(window);
 	// Initialize GLEW
 	if (glewInit() != GLEW_OK) {
 		std::cerr << "Failed to initialize GLEW." << std::endl;
-		return -1;
+		return true;
 	}
 
 	glViewport(0, 0, width, height);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+	return false;
 }
 
 int main()
@@ -79,26 +81,21 @@ int main()
 	Camera camera(width, height, glm::vec3(-1.5f, 0.0f, 80.0f));
 	//terrain.Draw(terrainShader, camera);
 	camera.initMatrix(20.0f, 0.1f, 100.0f);
-	camera.rotateMatrix(-45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	
+	Pawn pawn(5.0f, 0.0f, 2.0f, 1.5f, 16, 16);
+	Pawn pawn2(5.0f, 0.0f, 2.0f, 1.5f, 16, 16);
+	pawn.setNewPosition(glm::vec3(-7.0f, 4.0f, 1.5f));
+	pawn2.setNewPosition(glm::vec3(-2.0f, 0.0f, 1.5f));
 
-	// Sphere sphere(3.0f, 16, 16);
-	// Cylinder cylinder(8.0f, 2.0f,4.0f,8, 8);
-	//
-	// //Scale down the sphere and cylinder by 1/2
-	// sphere.m_model = glm::scale(sphere.m_model, glm::vec3(0.5f, 0.5f, 0.5f));
-	// cylinder.m_model = glm::scale(cylinder.m_model, glm::vec3(0.5f, 0.5f, 0.5f));
-	//
-	// cylinder.m_model = glm::translate(cylinder.m_model, glm::vec3(0.0f, 0.0f, 4.0f));
-	// sphere.m_model = glm::translate(sphere.m_model, glm::vec3(0.0f, 2.0f, 4.0f));
-	//
-	// //Rotate the cylinder by 90 degrees
-	// cylinder.m_model = glm::rotate(cylinder.m_model, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	// //sphere.m_model = glm::rotate(sphere.m_model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	Texture texture = Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
+	Cube cube(texture);
+	cube.transform.setLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	Pawn pawn(5.0f, 1.0f, 3.0f, 2.0f, 16, 16);
-	pawn.Position = glm::vec3(-8.0f, 0.0f, 5.0f);
-	pawn.Rotation = glm::rotate( pawn.Rotation, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	pawn.Scale = glm::vec3(0.6f, 0.6f, 0.6f);
+	//pawn2.set
+	//pawn.Position = glm::vec3(-8.0f, 0.0f, 5.0f);
+	//pawn.Rotation = glm::rotate( pawn.Rotation, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//pawn.Scale = glm::vec3(0.6f, 0.6f, 0.6f);
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
 	{
@@ -112,16 +109,17 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
 
-
+		
 
 		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Draw the mesh
 
 		pawn.Render(default_shader, camera);
-		board.Draw(default_shader,camera);
-		//sphere.Render(default_shader, camera);
-		//cylinder.Render(default_shader, camera);
+		pawn2.Render(default_shader, camera);
+		//board.Draw(default_shader,camera);
+		cube.Render(default_shader, camera);
+		
 
 
 		glfwSwapBuffers(window);

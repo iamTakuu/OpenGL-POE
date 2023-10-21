@@ -13,6 +13,7 @@ public:
 	const char* type;
 	// Determines how the texture is stored
 	GLuint unit;
+	Texture();
 	Texture(const char* image, const char* texType, GLuint slot, GLenum format, GLenum pixelType);
 
 	// Assigns a texture unit to a texture

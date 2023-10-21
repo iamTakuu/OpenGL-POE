@@ -1,5 +1,9 @@
 #include "../Headers/Texture.h"
 
+Texture::Texture()
+{
+}
+
 Texture::Texture(const char* image, const char* textType, GLuint slot, GLenum format, GLenum pixelType)
 {
 	// Assigns the type of the texture ot the texture object

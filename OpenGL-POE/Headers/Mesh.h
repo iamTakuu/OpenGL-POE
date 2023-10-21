@@ -14,13 +14,13 @@ class Mesh
 	public:
 		std::vector <Vertex> vertices; // Uses vector instead of array because we don't know how many vertices we will have
 		std::vector <GLuint> indices;
-		std::vector <Texture> textures;
+		Texture texture;
 		GLint texIndx;
 
 		VAO VAO;
 		Mesh();
 		// Constructor that loads the mesh's vertices, indices, and textures
-		Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures, GLint texIndx);
+		Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, Texture& texture);
 
 		// Draws the mesh
 		void Draw(Shader& shader, Camera& camera);

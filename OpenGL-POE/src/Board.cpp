@@ -17,15 +17,15 @@ const Vertex tileVertex[] =
 const Vertex boarderVertices[] =
 {
 	//              COORDINATES           /            COLORS          /      TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-9.0f, -9.0f,  0.5f), glm::vec3(2.0f, 0.5f, 1.0f)},
-	Vertex{glm::vec3(-9.0f, -9.0f, -0.5f), glm::vec3(2.0f, 0.5f, 1.0f)},
-	Vertex{glm::vec3(9.0f, -9.0f, -0.5f), glm::vec3(2.0f, 0.5f, 1.0f)},
-	Vertex{glm::vec3(9.0f, -9.0f,  0.5f),  glm::vec3(2.0f, 0.5f, 1.0f)},
+	Vertex{glm::vec3(-9.0f, -9.0f,  0.5f), glm::vec3(2.0f, 0.5f, 1.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-9.0f, -9.0f, -0.5f), glm::vec3(2.0f, 0.5f, 1.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(9.0f, -9.0f, -0.5f), glm::vec3(2.0f, 0.5f, 1.0f), glm::vec2(1.0f, 0.0f)},
+	Vertex{glm::vec3(9.0f, -9.0f,  0.5f),  glm::vec3(2.0f, 0.5f, 1.0f), glm::vec2(1.0f, 0.0f)},
 
-	Vertex{glm::vec3(-9.0f,  9.0f,  0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
-	Vertex{glm::vec3(-9.0f,  9.0f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
-	Vertex{glm::vec3(9.0f,  9.0f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
-	Vertex{glm::vec3(9.0f,  9.0f,  0.5f), glm::vec3(1.0f, 0.0f, 1.0f)}
+	Vertex{glm::vec3(-9.0f,  9.0f,  0.5f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3(-9.0f,  9.0f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3(9.0f,  9.0f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3(9.0f,  9.0f,  0.5f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)}
 };
 
 const GLuint cubeIndices[] =
@@ -46,14 +46,17 @@ const GLuint cubeIndices[] =
 
 Board::Board(GLuint count, Shader& shaderProgram)
 {
-	Texture textures[] =
-	{
-		// Leave textType blank for now, later we will use it to determine the type of texture.
-		// Like diffuse, specular, etc.
-		//Texture("Textures/pop_cat.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE), // Text Index: 0
-		Texture("Textures/black.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE) // Text Index: 1
-	};
+	// Texture textures[] =
+	// {
+	// 	// Leave textType blank for now, later we will use it to determine the type of texture.
+	// 	// Like diffuse, specular, etc.
+	// 	//Texture("Textures/pop_cat.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+	// 	Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE), // Text Index: 0
+	// 	Texture("Textures/black.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE) // Text Index: 1
+	// };
+
+	Texture whiteTexture = Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture blackTexture = Texture("Textures/black.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
 	// Create the shader program
 	//Shader shaderProgram = Shader("Shaders/default.vert", "Shaders/default.frag");
 
@@ -63,7 +66,7 @@ Board::Board(GLuint count, Shader& shaderProgram)
 	std::vector <Vertex> boarderVerts(boarderVertices, boarderVertices + sizeof(boarderVertices) / sizeof(Vertex));
 
 	std::vector <GLuint> ind(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
-	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+	//std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
 	glm::vec3 pos = glm::vec3(-4.5f, -4.5f, 0.0f);
 	bool startWhite = false;
@@ -73,12 +76,12 @@ Board::Board(GLuint count, Shader& shaderProgram)
 		if (startWhite)
 		{
 			// Add the white mesh to the vector
-			m_meshes.push_back((i % 2 == 0) ? Mesh(tileVerts, ind, tex, 0) : Mesh(tileVerts, ind, tex, 1));
+			m_meshes.push_back((i % 2 == 0) ? Mesh(tileVerts, ind, whiteTexture) : Mesh(tileVerts, ind, blackTexture));
 		}
 		else
 		{
 			// Add the black mesh to the vector
-			m_meshes.push_back((i % 2 == 0) ? Mesh(tileVerts, ind, tex, 1) : Mesh(tileVerts, ind, tex, 0));
+			m_meshes.push_back((i % 2 == 0) ? Mesh(tileVerts, ind, blackTexture) : Mesh(tileVerts, ind, whiteTexture));
 		}
 		
 		
@@ -102,16 +105,12 @@ Board::Board(GLuint count, Shader& shaderProgram)
 			startWhite = !startWhite;
 		}
 	}
-
-
 	
 	// Add the boarder mesh to the vector
-	m_meshes.push_back(Mesh(boarderVerts, ind, tex, 0));
+	m_meshes.push_back(Mesh(boarderVerts, ind, whiteTexture));
 	m_positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 	m_models.push_back(glm::mat4(1.0f));
 	m_models[count] = glm::translate(m_models[count], m_positions[count]);
-
-	
 }
 
 
@@ -120,9 +119,9 @@ void Board::Draw(Shader& shaderProgram, Camera& camera)
 {
 	for (size_t i = 0; i < m_meshes.size(); i++)
 	{
-		
 		shaderProgram.Activate();
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(parent_model * m_models[i]));
+		// Set the model matrix
+		shaderProgram.setMat4("model", parent_model * m_models[i]);
 
 		m_meshes[i].Draw(shaderProgram, camera);
 	}

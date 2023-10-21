@@ -68,23 +68,16 @@ void Cylinder::setIndices()
 
 void Cylinder::SetupMesh()
 {
-    Texture textures[] =
-    {
-        // Leave textType blank for now, later we will use it to determine the type of texture.
-        // Like diffuse, specular, etc.
-        //Texture("Textures/pop_cat.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-        Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE), // Text Index: 0
-        Texture("Textures/black.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE) // Text Index: 1
-    };
+    Texture texture = Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
+    //std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
-    std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-
-    m_mesh = Mesh(m_vertices, m_indices, tex, 1);
+    m_mesh = Mesh(m_vertices, m_indices, texture);
 }
 
-void Cylinder::Render(Shader& shader, Camera& camera, const glm::mat4& parent_model)
+void Cylinder::Render(Shader& shader, Camera& camera)
 {
     shader.Activate();
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(parent_model * m_model));
+    shader.setMat4("model", transform.getModelMatrix());
+    //glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(parent_model * m_model));
     m_mesh.Draw(shader, camera);
 }
