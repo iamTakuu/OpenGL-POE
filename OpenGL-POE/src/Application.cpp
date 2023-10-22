@@ -3,9 +3,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "../Headers/Bishop.h"
 #include "../Headers/Rook.h"
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
+#include "../Headers/Knight.h"
 #include "../Headers/Terrain.h"
 #include "../Headers/Pawn.h"
 
@@ -72,7 +74,7 @@ int main()
 	// Camera
 	Camera camera(width, height, glm::vec3(-1.5f, 0.0f, 80.0f));
 	camera.initMatrix(20.0f, 0.1f, 150.0f);
-	camera.rotateMatrix(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	PawnProps pawn_props =
 		{
@@ -114,11 +116,43 @@ int main()
 		16,
 		16
 	};
-	
+		
 	Rook rook(rook_props, true);
 	rook.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	rook.setPosition(glm::vec3(-4.8f, .8f, -3.0f));
+	
+	BishopProps bishop_props =
+	{
+		1.8f,
+		0.8f,
+		2.5f,
+		10.0f,
+		1.0f,
+		3.0f,
+		2.5f,
+		3.0f,
+		16,
+		16
+	};
 
+	Bishop bishop(bishop_props, false);
+	bishop.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	bishop.setPosition(glm::vec3(4.8f, .8f, 0.0f));
+
+	KnightProps knight_props =
+	{
+		12.0f,
+		0.8f,
+		2.5f,
+		2.5f,
+		3.0f,
+		16,
+		16,
+	};
+	Knight knight(knight_props, true);
+	knight.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	knight.setPosition(glm::vec3(-4.8f, .9f, 0.5f));
+	//knight.setRotation(glm::vec3(0.0f, 45.0f, 0.0f));
 
 	Terrain terrain("Textures/terrain.png");
 	terrain.transform.setLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -134,23 +168,24 @@ int main()
 		// Clear the screen to a specific color
 
 		//Clear color to black (not really necessary actually since we are drawing a background image)
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.8f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
 		
 		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Render the mesh
-		 board.Draw(default_shader, camera);
-		 for (auto pawn : white_pawns)
-		 {
-		 	pawn.Render(default_shader, camera);
-		 }
-		 for (auto pawn : black_pawns)
-		 {
-		 	pawn.Render(default_shader, camera);
-		 }
-		rook.Render(default_shader, camera);
-
+		//  board.Draw(default_shader, camera);
+		//  for (auto pawn : white_pawns)
+		//  {
+		//  	pawn.Render(default_shader, camera);
+		//  }
+		//  for (auto pawn : black_pawns)
+		//  {
+		//  	pawn.Render(default_shader, camera);
+		//  }
+		// rook.Render(default_shader, camera);
+		// bishop.Render(default_shader, camera);
+		knight.Render(default_shader, camera);
 		terrain.Render(default_shader, camera);
 		
 		glfwSwapBuffers(window);
