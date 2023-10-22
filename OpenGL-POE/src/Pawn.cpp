@@ -3,14 +3,8 @@
 Pawn::Pawn(const PawnProps& properties, const bool isWhite)
 {
     
-    if(isWhite)
-    {
-        m_texture = Texture("Textures/white-piece.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE);
-    }
-    else
-    {
-        m_texture = Texture("Textures/black-piece.png", "", 0, GL_RGBA, GL_UNSIGNED_BYTE);
-    }
+    m_texture = Texture(isWhite ? "Textures/white-piece.png" : "Textures/black-piece.png", "", 0, GL_RGBA,
+                        GL_UNSIGNED_BYTE);
     // Create the cylinder and sphere
     m_cylinder = Cylinder(properties.cyHeight, properties.cyTopRadius, properties.cyBottomRadius,
                           properties.sectorCount, properties.stackCount, m_texture);

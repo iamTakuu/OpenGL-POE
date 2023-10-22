@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "../Headers/Bishop.h"
+#include "../Headers/Rook.h"
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
 #include "../Headers/Terrain.h"
@@ -75,7 +75,7 @@ int main()
 	camera.initMatrix(20.0f, 0.1f, 100.0f);
 	camera.rotateMatrix(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	PawnProps pawnProperties =
+	PawnProps pawn_props =
 		{
 		5.0f,
 		0.0f,
@@ -90,11 +90,11 @@ int main()
 	//pawns.reserve(8);
 	for (size_t i = 0; i < 8; i++)
 	{
-		white_pawns.emplace_back(pawnProperties, true);
+		white_pawns.emplace_back(pawn_props, true);
 		white_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
 		white_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, 2.0f));
 
-		black_pawns.emplace_back(pawnProperties, false);
+		black_pawns.emplace_back(pawn_props, false);
 		black_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
 		black_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, -4.5f));
 	}
@@ -103,7 +103,7 @@ int main()
 	//pawn.setPosition(glm::vec3(-4.4f, 1.3f, 3.0f));
 
 
-	BishopProps bishopProperties =
+	RookProps rook_props =
 	{
 		1.8f,
 		2.5f,
@@ -115,9 +115,9 @@ int main()
 		16,
 		16
 	};
-	Bishop white_bishop(bishopProperties, true);
-	white_bishop.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	white_bishop.setPosition(glm::vec3(-4.8f, .8f, -3.0f));
+	Rook rook(rook_props, true);
+	rook.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	rook.setPosition(glm::vec3(-4.8f, .8f, -3.0f));
 	while (!glfwWindowShouldClose(window))
 	{
 		// Input
@@ -142,7 +142,7 @@ int main()
 		{
 			pawn.Render(default_shader, camera);
 		}
-		white_bishop.Render(default_shader, camera);
+		rook.Render(default_shader, camera);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();

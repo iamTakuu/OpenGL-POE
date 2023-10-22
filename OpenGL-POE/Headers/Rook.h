@@ -4,7 +4,7 @@
 #include "Mesh.h"
 #include "Transform.h"
 
-struct BishopProps
+struct RookProps
 {
     float cyTopHeight;
     float cyTopRadius;
@@ -19,12 +19,12 @@ struct BishopProps
     int sectorCount;
     int stackCount;
 };
-class Bishop
+class Rook
 {
 public:
     Transform m_transform;
 
-    Bishop(const BishopProps& properties, bool isWhite);
+    Rook(const RookProps& properties, bool isWhite);
 
     void Render(Shader& shader, Camera& camera);
 
@@ -34,9 +34,6 @@ private:
     Cylinder top_cylinder;
     Cylinder mid_cylinder;
     Cylinder bot_cylinder;
-    //Cube cube_1;
-    //Cube cube_2;
-    //Cube cube_3;
     Texture m_texture;
     
 };

@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Bishop.cpp">
+    <ClCompile Include="src\Rook.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -538,7 +538,7 @@
     <ClCompile Include="src\stb.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Bishop.h" />
+    <ClInclude Include="Headers\Rook.h" />
     <ClInclude Include="Headers\Board.h" />
     <ClInclude Include="Headers\Camera.h" />
     <ClInclude Include="Headers\Cube.h" />
