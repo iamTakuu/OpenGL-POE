@@ -37,8 +37,7 @@ bool InitWindow()
 	// Set the profile of OpenGL that we want to use
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
-	window = glfwCreateWindow(width, height, "POE - Chess Demo", NULL, NULL);
+	window = glfwCreateWindow(width, height, "POE - Chess Demo", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -72,7 +71,7 @@ int main()
 
 	// Camera
 	Camera camera(width, height, glm::vec3(-1.5f, 0.0f, 80.0f));
-	camera.initMatrix(20.0f, 0.1f, 100.0f);
+	camera.initMatrix(20.0f, 0.1f, 150.0f);
 	camera.rotateMatrix(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	PawnProps pawn_props =
@@ -87,7 +86,7 @@ int main()
 	// Create a vector of 8 pawns
 	std::vector<Pawn> white_pawns;
 	std::vector<Pawn> black_pawns;
-	//pawns.reserve(8);
+	
 	for (size_t i = 0; i < 8; i++)
 	{
 		white_pawns.emplace_back(pawn_props, true);
@@ -115,9 +114,17 @@ int main()
 		16,
 		16
 	};
+	
 	Rook rook(rook_props, true);
 	rook.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	rook.setPosition(glm::vec3(-4.8f, .8f, -3.0f));
+
+
+	Terrain terrain("Textures/terrain.png");
+	terrain.transform.setLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	terrain.transform.setLocalPosition(glm::vec3(0.0f, -6.0f, 0.0f));
+	
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		// Input
@@ -132,17 +139,19 @@ int main()
 		
 		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
-		// Draw the mesh
-		board.Draw(default_shader, camera);
-		for (auto pawn : white_pawns)
-		{
-			pawn.Render(default_shader, camera);
-		}
-		for (auto pawn : black_pawns)
-		{
-			pawn.Render(default_shader, camera);
-		}
+		// Render the mesh
+		 board.Draw(default_shader, camera);
+		 for (auto pawn : white_pawns)
+		 {
+		 	pawn.Render(default_shader, camera);
+		 }
+		 for (auto pawn : black_pawns)
+		 {
+		 	pawn.Render(default_shader, camera);
+		 }
 		rook.Render(default_shader, camera);
+
+		terrain.Render(default_shader, camera);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();

@@ -15,7 +15,7 @@ class Mesh
 		std::vector <Vertex> vertices; // Uses vector instead of array because we don't know how many vertices we will have
 		std::vector <GLuint> indices;
 		Texture texture;
-		GLint texIndx;
+		//GLint texIndx;
 
 		VAO VAO;
 		Mesh();
@@ -24,8 +24,12 @@ class Mesh
 
 		// Draws the mesh
 		void Draw(Shader& shader, Camera& camera);
+		void isTerrain(int width, int height, int resolution);
 
 	private:
+		int numStrips;
+		int numTrisPerStrip;
+	    bool m_isTerrain = false;
 		void SetupMesh();
 
 };

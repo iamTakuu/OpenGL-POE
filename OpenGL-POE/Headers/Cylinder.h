@@ -10,7 +10,6 @@ public:
              GLint stackCount = 1, const Texture& texture = Texture());
 
     void Render(Shader& shader, Camera& camera);
-    //Transform* m_parent = nullptr;
     Transform transform;
 	
 private:

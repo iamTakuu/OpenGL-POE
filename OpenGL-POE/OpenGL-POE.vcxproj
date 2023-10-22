@@ -561,9 +561,14 @@
     <None Include="Shaders\height.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="HeightMap\Terrain.png" />
-    <Image Include="HeightMap\Terrain2.png" />
     <Image Include="Textures\pop_cat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Textures\rocks.png" />
+    <Content Include="Textures\terrain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HeightMap\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

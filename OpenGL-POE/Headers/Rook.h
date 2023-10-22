@@ -8,14 +8,11 @@ struct RookProps
 {
     float cyTopHeight;
     float cyTopRadius;
-
     float cyMidHeight;
     float cyTopMidRadius;
     float cyBottomMidRadius;
-    
     float cyBotHeight;
     float cyBotRadius;
-    
     int sectorCount;
     int stackCount;
 };
