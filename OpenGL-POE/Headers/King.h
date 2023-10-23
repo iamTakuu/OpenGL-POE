@@ -1,12 +1,13 @@
 ﻿#pragma once
-
 #include "Cube.h"
 #include "Cylinder.h"
 #include "Mesh.h"
 #include "Sphere.h"
 #include "Transform.h"
-struct KnightProps
+struct KingProps
 {
+    float cyTopHeight;
+    float cyTopRadius;
     float cyMidHeight;
     float cyTopMidRadius;
     float cyBottomMidRadius;
@@ -15,11 +16,11 @@ struct KnightProps
     int sectorCount;
     int stackCount;
 };
-class Knight
+class King
 {
 public:
 
-    Knight(const KnightProps& properties, bool isWhite);
+    King(const KingProps& properties, bool isWhite);
     
     Transform m_transform;
 
@@ -27,12 +28,10 @@ public:
 
     void setPosition(const glm::vec3& newPosition);
     void setScale(const glm::vec3& newScale);
-    // Avoid using this, it's not working properly
-    void setRotation(glm::vec3 vec);
-
 private:
-    Cube headCube = Cube(1.0f, 1.0f, 1.0f);
-    //Cylinder top_cylinder;
+    Cube horizontalCube = Cube(1.0f, 1.0f, 1.0f);
+    Cube verticalCube = Cube(1.0f, 1.0f, 1.0f);
+    Cylinder top_cylinder;
     Cylinder mid_cylinder;
     Cylinder bot_cylinder;
     Texture m_texture;

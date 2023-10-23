@@ -42,6 +42,7 @@ void Transform::setLocalScale(const glm::vec3& newScale)
 void Transform::setParent(Transform* newParent)
 {
     m_parent = newParent;
+    computeModelMatrix();
 }
 
 const glm::vec3& Transform::getGlobalPosition() const

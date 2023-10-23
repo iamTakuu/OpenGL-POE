@@ -7,6 +7,7 @@
 #include "../Headers/Rook.h"
 #include "../Headers/Mesh.h"
 #include "../Headers/Board.h"
+#include "../Headers/King.h"
 #include "../Headers/Knight.h"
 #include "../Headers/Terrain.h"
 #include "../Headers/Pawn.h"
@@ -139,6 +140,23 @@ int main()
 	bishop.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	bishop.setPosition(glm::vec3(4.8f, .8f, 0.0f));
 
+	KingProps king_props =
+	{
+		1.5f,
+		2.5f,
+		15.0f,
+		1.0f,
+		2.0f,
+		2.5f,
+		3.0f,
+		16,
+		16
+	};
+
+	King king(king_props, false);
+	king.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	king.setPosition(glm::vec3(-2.0f, .8f, 0.0f));
+	
 	KnightProps knight_props =
 	{
 		12.0f,
@@ -149,7 +167,7 @@ int main()
 		16,
 		16,
 	};
-	Knight knight(knight_props, true);
+	Knight knight(knight_props, false);
 	knight.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	knight.setPosition(glm::vec3(-4.8f, .9f, 0.5f));
 	//knight.setRotation(glm::vec3(0.0f, 45.0f, 0.0f));
@@ -174,18 +192,19 @@ int main()
 		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
 		// Render the mesh
-		//  board.Draw(default_shader, camera);
-		//  for (auto pawn : white_pawns)
-		//  {
-		//  	pawn.Render(default_shader, camera);
-		//  }
-		//  for (auto pawn : black_pawns)
-		//  {
-		//  	pawn.Render(default_shader, camera);
-		//  }
-		// rook.Render(default_shader, camera);
-		// bishop.Render(default_shader, camera);
+		 board.Draw(default_shader, camera);
+		 for (auto pawn : white_pawns)
+		 {
+		 	pawn.Render(default_shader, camera);
+		 }
+		 for (auto pawn : black_pawns)
+		 {
+		 	pawn.Render(default_shader, camera);
+		 }
+		rook.Render(default_shader, camera);
+		bishop.Render(default_shader, camera);
 		knight.Render(default_shader, camera);
+		king.Render(default_shader, camera);
 		terrain.Render(default_shader, camera);
 		
 		glfwSwapBuffers(window);

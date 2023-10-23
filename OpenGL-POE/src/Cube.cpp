@@ -1,13 +1,20 @@
 ﻿#include "../Headers/Cube.h"
 
 Cube::Cube()
-{
-}
+= default;
 
 Cube::Cube(const Texture& texture)
 {
     m_texture = texture;
     setVertices();
+    setIndices();
+    SetupMesh();
+}
+
+Cube::Cube(float width, float height, float length, const Texture& texture)
+{
+    m_texture = texture;
+    setVertices(width, height, length);
     setIndices();
     SetupMesh();
 }
@@ -30,6 +37,24 @@ void Cube::setIndices()
         4, 6, 7
     };
     m_indices = std::vector<GLuint>(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
+}
+void Cube::setVertices(float width, float height, float length)
+{
+    const Vertex cubeVertex[] =
+    {
+        //              COORDINATES           /            COLORS          /      TEXTURE COORDINATES    //
+        Vertex{glm::vec3(-width, -height, length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)}, // Front bottom left
+        Vertex{glm::vec3(-width, -height, -length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)}, // Back bottom left
+        Vertex{glm::vec3(width, -height, -length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},  // Back bottom right
+        Vertex{glm::vec3(width, -height, length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}, // Front bottom right
+
+        Vertex{glm::vec3(-width, height, length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)}, // Front top left
+        Vertex{glm::vec3(-width, height, -length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)}, // Back top left
+        Vertex{glm::vec3(width, height, -length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},  // Back top right
+        Vertex{glm::vec3(width, height, length), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}  // Front top right
+    };
+
+    m_vertices = std::vector<Vertex>(cubeVertex, cubeVertex + sizeof(cubeVertex) / sizeof(Vertex));
 }
 void Cube::setVertices()
 {
