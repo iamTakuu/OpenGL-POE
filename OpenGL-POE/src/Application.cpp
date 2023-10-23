@@ -11,6 +11,7 @@
 #include "../Headers/Knight.h"
 #include "../Headers/Terrain.h"
 #include "../Headers/Pawn.h"
+#include "../Headers/Queen.h"
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -100,7 +101,8 @@ int main()
 		black_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
 		black_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, -4.5f));
 	}
-		
+
+	//TODO: Create a vector with all the other pieces || Or just manually create each piece for now
 	//****** Good Starting Position ********
 	//pawn.setPosition(glm::vec3(-4.4f, 1.3f, 3.0f));
 
@@ -140,6 +142,21 @@ int main()
 	bishop.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	bishop.setPosition(glm::vec3(4.8f, .8f, 0.0f));
 
+	
+	KnightProps knight_props =
+	{
+		12.0f,
+		0.8f,
+		2.5f,
+		2.5f,
+		3.0f,
+		16,
+		16,
+	};
+	Knight knight(knight_props, false);
+	knight.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	knight.setPosition(glm::vec3(-4.8f, .9f, 0.5f));
+	
 	KingProps king_props =
 	{
 		1.5f,
@@ -157,21 +174,25 @@ int main()
 	king.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	king.setPosition(glm::vec3(-2.0f, .8f, 0.0f));
 	
-	KnightProps knight_props =
+
+	QueenProps queen_props =
 	{
-		12.0f,
-		0.8f,
+		2.8f,
 		2.5f,
+		1.8f,
+		12.0f,
+		1.5f,
+		2.0f,
 		2.5f,
 		3.0f,
 		16,
-		16,
+		16
 	};
-	Knight knight(knight_props, false);
-	knight.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	knight.setPosition(glm::vec3(-4.8f, .9f, 0.5f));
-	//knight.setRotation(glm::vec3(0.0f, 45.0f, 0.0f));
+	Queen queen(queen_props, false);
+	queen.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	queen.setPosition(glm::vec3(3.4f, .8f, 0.0f));
 
+	
 	Terrain terrain("Textures/terrain.png");
 	terrain.transform.setLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	terrain.transform.setLocalPosition(glm::vec3(0.0f, -6.0f, 0.0f));
@@ -206,6 +227,7 @@ int main()
 		knight.Render(default_shader, camera);
 		king.Render(default_shader, camera);
 		terrain.Render(default_shader, camera);
+		queen.Render(default_shader, camera);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
