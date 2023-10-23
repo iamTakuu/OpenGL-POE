@@ -96,11 +96,11 @@ int main()
 	{
 		white_pawns.emplace_back(pawn_props, true);
 		white_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
-		white_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, 2.0f));
+		white_pawns[i].setPosition(glm::vec3(-4.5f + (1.28f * i), 1.3f, 1.95f));
 
 		black_pawns.emplace_back(pawn_props, false);
 		black_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
-		black_pawns[i].setPosition(glm::vec3(-4.5f + (1.3f * i), 1.3f, -4.5f));
+		black_pawns[i].setPosition(glm::vec3(-4.5f + (1.28f * i), 1.3f, -4.4f));
 	}
 
 	//TODO: Create a vector with all the other pieces || Or just manually create each piece for now
@@ -121,9 +121,21 @@ int main()
 		16
 	};
 		
-	Rook rook(rook_props, true);
-	rook.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	rook.setPosition(glm::vec3(-4.8f, .8f, -3.0f));
+	Rook rookWhiteOne(rook_props, true);
+	rookWhiteOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	rookWhiteOne.setPosition(glm::vec3(-4.7f, .8f, 3.3f));
+
+	Rook rookWhiteTwo(rook_props, true);
+	rookWhiteTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	rookWhiteTwo.setPosition(glm::vec3(4.7f, .8f, 3.3f));
+
+	Rook rookBlackOne(rook_props, false);
+	rookBlackOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	rookBlackOne.setPosition(glm::vec3(-4.7f, .8f, -6.0f));
+
+	Rook rookBlackTwo(rook_props, false);
+	rookBlackTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	rookBlackTwo.setPosition(glm::vec3(4.7f, .8f, -6.0f));
 	
 	BishopProps bishop_props =
 	{
@@ -139,9 +151,21 @@ int main()
 		16
 	};
 
-	Bishop bishop(bishop_props, false);
-	bishop.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	bishop.setPosition(glm::vec3(4.8f, .8f, 0.0f));
+	Bishop bishopBlackOne(bishop_props, false);
+	bishopBlackOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	bishopBlackOne.setPosition(glm::vec3(-2.0f, .8f, -6.0f));
+	
+	Bishop bishopBlackTwo(bishop_props, false);
+	bishopBlackTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	bishopBlackTwo.setPosition(glm::vec3(2.0f, .8f, -6.0f));
+
+	Bishop bishopWhiteOne(bishop_props, true);
+	bishopWhiteOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	bishopWhiteOne.setPosition(glm::vec3(-2.0f, .8f, 3.3f));
+
+	Bishop bishopWhiteTwo(bishop_props, true);
+	bishopWhiteTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	bishopWhiteTwo.setPosition(glm::vec3(2.0f, .8f, 3.3f));
 
 	
 	KnightProps knight_props =
@@ -154,9 +178,21 @@ int main()
 		16,
 		16,
 	};
-	Knight knight(knight_props, false);
-	knight.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	knight.setPosition(glm::vec3(-4.8f, .9f, 0.5f));
+	Knight knightBlackOne(knight_props, false);
+	knightBlackOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	knightBlackOne.setPosition(glm::vec3(-3.35f, .8f, -6.0f));
+
+	Knight knightBlackTwo(knight_props, false);
+	knightBlackTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	knightBlackTwo.setPosition(glm::vec3(3.35f, .8f, -6.0f));
+
+	Knight knightWhiteOne(knight_props, true);
+	knightWhiteOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	knightWhiteOne.setPosition(glm::vec3(-3.35f, .8f, 3.3f));
+
+	Knight knightWhiteTwo(knight_props, true);
+	knightWhiteTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	knightWhiteTwo.setPosition(glm::vec3(3.35f, .8f, 3.3f));
 	
 	KingProps king_props =
 	{
@@ -171,9 +207,13 @@ int main()
 		16
 	};
 
-	King king(king_props, false);
-	king.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	king.setPosition(glm::vec3(-2.0f, .8f, 0.0f));
+	King kingBlack(king_props, false);
+	kingBlack.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	kingBlack.setPosition(glm::vec3(-0.65f, .8f, -6.0f));
+
+	King kingWhite(king_props, true);
+	kingWhite.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	kingWhite.setPosition(glm::vec3(-0.65f, .8f, 3.3f));
 	
 
 	QueenProps queen_props =
@@ -189,9 +229,14 @@ int main()
 		16,
 		16
 	};
-	Queen queen(queen_props, false);
-	queen.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	queen.setPosition(glm::vec3(3.4f, .8f, 0.0f));
+	
+	Queen queenBlack(queen_props, false);
+	queenBlack.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	queenBlack.setPosition(glm::vec3(0.65f, .8f, -6.0f));
+	
+	Queen queenWhite(queen_props, true);
+	queenWhite.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	queenWhite.setPosition(glm::vec3(0.65f, .8f, 3.3f));
 
 	
 	Terrain terrain("Textures/terrain.png");
@@ -223,12 +268,36 @@ int main()
 		 {
 		 	pawn.Render(default_shader, camera);
 		 }
-		rook.Render(default_shader, camera);
-		bishop.Render(default_shader, camera);
-		knight.Render(default_shader, camera);
-		king.Render(default_shader, camera);
+		
+		 //Render rooks
+		 rookWhiteOne.Render(default_shader, camera);
+		rookWhiteTwo.Render(default_shader, camera);
+		rookBlackOne.Render(default_shader, camera);
+		rookBlackTwo.Render(default_shader, camera);
+		
+		//Render knights
+		knightWhiteOne.Render(default_shader, camera);
+		knightWhiteTwo.Render(default_shader, camera);
+		knightBlackOne.Render(default_shader, camera);
+		knightBlackTwo.Render(default_shader, camera);
+		
+		//Render bishops
+		bishopBlackOne.Render(default_shader, camera);
+		bishopBlackTwo.Render(default_shader, camera);
+		bishopWhiteOne.Render(default_shader, camera);
+		bishopWhiteTwo.Render(default_shader, camera);
+		
+		//Render kings
+		kingBlack.Render(default_shader, camera);
+		kingWhite.Render(default_shader, camera);
+		
+		//Render queens
+		queenBlack.Render(default_shader, camera);
+		queenWhite.Render(default_shader, camera);
+		
+		//Render terrain
 		terrain.Render(default_shader, camera);
-		queen.Render(default_shader, camera);
+		
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
