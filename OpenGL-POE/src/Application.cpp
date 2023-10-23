@@ -90,7 +90,8 @@ int main()
 	// Create a vector of 8 pawns
 	std::vector<Pawn> white_pawns;
 	std::vector<Pawn> black_pawns;
-	
+
+	// Create the pawns and set their position using MATHHH
 	for (size_t i = 0; i < 8; i++)
 	{
 		white_pawns.emplace_back(pawn_props, true);
@@ -207,12 +208,12 @@ int main()
 		// Clear the screen to a specific color
 
 		//Clear color to black (not really necessary actually since we are drawing a background image)
-		glClearColor(0.1f, 0.1f, 0.8f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
 		
 		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
 		camera.Input(window);
-		// Render the mesh
+		// For loop to render all the Pawn objects
 		 board.Draw(default_shader, camera);
 		 for (auto pawn : white_pawns)
 		 {
