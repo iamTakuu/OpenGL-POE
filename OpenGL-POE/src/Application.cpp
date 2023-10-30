@@ -1,4 +1,3 @@
-
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -61,7 +60,6 @@ bool InitWindow()
 	return false;
 }
 
-
 int main()
 {
 	if (InitWindow()) // If the window was not created
@@ -78,6 +76,7 @@ int main()
 	camera.initMatrix(20.0f, 0.1f, 150.0f);
 	camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
+#pragma region PIECE PROPERTIES
 	PawnProps pawn_props =
 		{
 		5.0f,
@@ -87,6 +86,69 @@ int main()
 		16,
 		16
 		};
+	RookProps rook_props =
+	{
+		1.8f,
+		2.5f,
+		9.0f,
+		1.0f,
+		3.0f,
+		1.0f,
+		3.5f,
+		16,
+		16
+	};
+	BishopProps bishop_props =
+{
+		1.8f,
+		0.8f,
+		2.5f,
+		10.0f,
+		1.0f,
+		3.0f,
+		2.5f,
+		3.0f,
+		16,
+		16
+	};
+	
+	KnightProps knight_props =
+	{
+		12.0f,
+		0.8f,
+		2.5f,
+		2.5f,
+		3.0f,
+		16,
+		16,
+	};
+	KingProps king_props =
+{
+		1.5f,
+		2.5f,
+		15.0f,
+		1.0f,
+		2.0f,
+		2.5f,
+		3.0f,
+		16,
+		16
+	};
+	QueenProps queen_props =
+{
+		2.8f,
+		2.5f,
+		1.8f,
+		12.0f,
+		1.5f,
+		2.0f,
+		2.5f,
+		3.0f,
+		16,
+		16
+	};
+#pragma endregion
+	
 	// Create a vector of 8 pawns
 	std::vector<Pawn> white_pawns;
 	std::vector<Pawn> black_pawns;
@@ -107,20 +169,7 @@ int main()
 	//****** Good Starting Position ********
 	//pawn.setPosition(glm::vec3(-4.4f, 1.3f, 3.0f));
 
-
-	RookProps rook_props =
-	{
-		1.8f,
-		2.5f,
-		9.0f,
-		1.0f,
-		3.0f,
-		1.0f,
-		3.5f,
-		16,
-		16
-	};
-		
+#pragma region PIECE CREATION
 	Rook rookWhiteOne(rook_props, true);
 	rookWhiteOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	rookWhiteOne.setPosition(glm::vec3(-4.7f, .8f, 3.3f));
@@ -137,20 +186,6 @@ int main()
 	rookBlackTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	rookBlackTwo.setPosition(glm::vec3(4.7f, .8f, -6.0f));
 	
-	BishopProps bishop_props =
-	{
-		1.8f,
-		0.8f,
-		2.5f,
-		10.0f,
-		1.0f,
-		3.0f,
-		2.5f,
-		3.0f,
-		16,
-		16
-	};
-
 	Bishop bishopBlackOne(bishop_props, false);
 	bishopBlackOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	bishopBlackOne.setPosition(glm::vec3(-2.0f, .8f, -6.0f));
@@ -166,18 +201,7 @@ int main()
 	Bishop bishopWhiteTwo(bishop_props, true);
 	bishopWhiteTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	bishopWhiteTwo.setPosition(glm::vec3(2.0f, .8f, 3.3f));
-
 	
-	KnightProps knight_props =
-	{
-		12.0f,
-		0.8f,
-		2.5f,
-		2.5f,
-		3.0f,
-		16,
-		16,
-	};
 	Knight knightBlackOne(knight_props, false);
 	knightBlackOne.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	knightBlackOne.setPosition(glm::vec3(-3.35f, .8f, -6.0f));
@@ -194,19 +218,6 @@ int main()
 	knightWhiteTwo.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	knightWhiteTwo.setPosition(glm::vec3(3.35f, .8f, 3.3f));
 	
-	KingProps king_props =
-	{
-		1.5f,
-		2.5f,
-		15.0f,
-		1.0f,
-		2.0f,
-		2.5f,
-		3.0f,
-		16,
-		16
-	};
-
 	King kingBlack(king_props, false);
 	kingBlack.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	kingBlack.setPosition(glm::vec3(-0.65f, .8f, -6.0f));
@@ -215,21 +226,6 @@ int main()
 	kingWhite.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	kingWhite.setPosition(glm::vec3(-0.65f, .8f, 3.3f));
 	
-
-	QueenProps queen_props =
-	{
-		2.8f,
-		2.5f,
-		1.8f,
-		12.0f,
-		1.5f,
-		2.0f,
-		2.5f,
-		3.0f,
-		16,
-		16
-	};
-	
 	Queen queenBlack(queen_props, false);
 	queenBlack.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	queenBlack.setPosition(glm::vec3(0.65f, .8f, -6.0f));
@@ -237,7 +233,7 @@ int main()
 	Queen queenWhite(queen_props, true);
 	queenWhite.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	queenWhite.setPosition(glm::vec3(0.65f, .8f, 3.3f));
-
+#pragma endregion
 	
 	Terrain terrain("Textures/terrain.png");
 	terrain.transform.setLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -297,7 +293,6 @@ int main()
 		
 		//Render terrain
 		terrain.Render(default_shader, camera);
-		
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
