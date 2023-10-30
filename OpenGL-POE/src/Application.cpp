@@ -238,13 +238,27 @@ int main()
 	Terrain terrain("Textures/terrain.png");
 	terrain.transform.setLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	terrain.transform.setLocalPosition(glm::vec3(0.0f, -6.0f, 0.0f));
-	
+	double lastTime = glfwGetTime();
+	int nbFrames = 0;
+
+
+
+		
 	
 	while (!glfwWindowShouldClose(window))
 	{
 		// Input
 		processInput(window);
-
+		// Measure speed
+		// Measure speed
+		double currentTime = glfwGetTime();
+		nbFrames++;
+		if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago
+			// printf and reset timer
+			printf("%d FPS\n", nbFrames);
+			nbFrames = 0;
+			lastTime += 1.0;
+		}
 		// ******************************* Rendering commands here ******************************************************
 		// Clear the screen to a specific color
 
@@ -264,7 +278,10 @@ int main()
 		 {
 		 	pawn.Render(default_shader, camera);
 		 }
+
+
 		
+#pragma region RENDERING
 		 //Render rooks
 		 rookWhiteOne.Render(default_shader, camera);
 		rookWhiteTwo.Render(default_shader, camera);
@@ -293,6 +310,8 @@ int main()
 		
 		//Render terrain
 		terrain.Render(default_shader, camera);
+#pragma endregion
+
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
