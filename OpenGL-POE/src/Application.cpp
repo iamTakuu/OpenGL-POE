@@ -1,3 +1,6 @@
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -241,24 +244,43 @@ int main()
 	double lastTime = glfwGetTime();
 	int nbFrames = 0;
 
+	IMGUI_CHECKVERSION();
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
-
+	// Setup Platform/Renderer backends
+	ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+	ImGui_ImplOpenGL3_Init();
 		
 	
 	while (!glfwWindowShouldClose(window))
 	{
+		// Start the Dear ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		// Ensure ImGui::Begin is called at least once during initialization
+		bool showFpsWindow = true;  // Toggle this flag based on your requirements
+
+		if (showFpsWindow && ImGui::Begin("FPS Counter", &showFpsWindow,
+		                                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+		                                  ImGuiWindowFlags_NoCollapse))
+		{
+			ImGui::SetWindowPos(ImVec2(5, 5));  // Set the desired screen coordinates
+			ImGui::SetNextWindowSize(ImVec2(150, 100));  // Set the desired window size
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			
+			ImGui::End();
+		}
+		//ImGui::ShowDemoWindow(); // Show demo window! :)
 		// Input
 		processInput(window);
-		// Measure speed
-		// Measure speed
-		double currentTime = glfwGetTime();
-		nbFrames++;
-		if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago
-			// printf and reset timer
-			printf("%d FPS\n", nbFrames);
-			nbFrames = 0;
-			lastTime += 1.0;
-		}
 		// ******************************* Rendering commands here ******************************************************
 		// Clear the screen to a specific color
 
@@ -312,13 +334,19 @@ int main()
 		terrain.Render(default_shader, camera);
 #pragma endregion
 
-		
+		// (Your code clears your framebuffer, renders your other stuff etc.)
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	
 	default_shader.Delete();
-	
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	//ImGui::End();
+	ImGui::DestroyContext();
 	glfwTerminate();
 	return 0;
 
