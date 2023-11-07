@@ -76,8 +76,8 @@ int main()
 
 	// Camera
 	Camera camera(width, height, glm::vec3(-1.5f, 0.0f, 80.0f));
-	camera.initMatrix(20.0f, 0.1f, 150.0f);
-	camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	//camera.initMatrix(20.0f, 0.1f, 150.0f);
+	//camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 #pragma region PIECE PROPERTIES
 	PawnProps pawn_props =
@@ -138,7 +138,7 @@ int main()
 		16
 	};
 	QueenProps queen_props =
-{
+	{
 		2.8f,
 		2.5f,
 		1.8f,
@@ -288,8 +288,8 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
 		
-		//camera.updateMatrix(20.0f, 0.1f, 100.0f);
-		camera.Input(window);
+		camera.updateMatrix(20.0f, 0.1f, 100.0f);
+		camera.Inputs(window);
 		// For loop to render all the Pawn objects
 		 board.Draw(default_shader, camera);
 		 for (auto pawn : white_pawns)

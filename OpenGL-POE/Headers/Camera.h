@@ -21,15 +21,11 @@ class Camera
 		// Up vector of the camera
 		glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
 		
-
-
-		
 		int width;
 		int height;
 
 		float speed = 0.1f;
-		bool needsUpdate;
-		//float sensitivity = 100.0f;
+		float sensitivity = 100.0f;
 
 		// Takes in the width and height of the window, and the position of the camera
 		Camera(int width, int height, glm::vec3 position);
@@ -39,12 +35,10 @@ class Camera
 
 		// Exports the camera matrix to a shader
 		void Matrix(Shader& shader, const char* uniform);
-
-		// Processes input received from any keyboard-like input system.
-		void Input(GLFWwindow* window);
-
-		void rotateMatrix(GLfloat angle, glm::vec3 axis);
-		void initMatrix(float FOVdeg, float nearPlane, float farPlane);
+	
+		void Inputs(GLFWwindow* window);
+		void HandleMouseInputs(GLFWwindow* window);
+		void HandleKeyInputs(GLFWwindow* window);
 
 	private:
 		// 3 Set points for the camera to move to
@@ -54,6 +48,8 @@ class Camera
 		glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	
 		glm::mat4 m_identity = glm::mat4(1.0f);
+
+		bool firstClick = true;
 
 };
 
