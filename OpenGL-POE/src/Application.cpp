@@ -15,6 +15,13 @@
 #include "../Headers/Pawn.h"
 #include "../Headers/Queen.h"
 
+// Window dimensions
+const unsigned width = 1280;
+const unsigned int height = 720;
+GLFWwindow* window;
+// Used to Lock/Unlock the camera using the TAB key
+bool camLocked = true;
+
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -26,11 +33,12 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
+		camLocked = !camLocked;
+	}
+	
 }
-// Window dimensions
-const unsigned width = 1280;
-const unsigned int height = 720;
-GLFWwindow* window;
+
 
 bool InitWindow()
 {
@@ -75,7 +83,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	// Camera
-	Camera camera(width, height, glm::vec3(-1.5f, 0.0f, 80.0f));
+	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 80.0f));
 	//camera.initMatrix(20.0f, 0.1f, 150.0f);
 	//camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -171,6 +179,8 @@ int main()
 	//TODO: Create a vector with all the other pieces || Or just manually create each piece for now
 	//****** Good Starting Position ********
 	//pawn.setPosition(glm::vec3(-4.4f, 1.3f, 3.0f));
+	
+	//CamCoords coords{glm::vec3(42.6f, 40.0f, 47.0f), glm::vec3(-0.57f, -0.52f, -0.64f)};
 
 #pragma region PIECE CREATION
 	Rook rookWhiteOne(rook_props, true);
@@ -241,8 +251,6 @@ int main()
 	Terrain terrain("Textures/terrain.png");
 	terrain.transform.setLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	terrain.transform.setLocalPosition(glm::vec3(0.0f, -6.0f, 0.0f));
-	double lastTime = glfwGetTime();
-	int nbFrames = 0;
 
 	IMGUI_CHECKVERSION();
 	// Setup Dear ImGui context
@@ -288,8 +296,10 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Also clear the depth buffer now!
 		
-		camera.updateMatrix(20.0f, 0.1f, 100.0f);
-		camera.Inputs(window);
+		
+		camera.updateMatrix(20.0f, 0.1f, 200.0f);
+		camera.Inputs(window, camLocked);
+		
 		// For loop to render all the Pawn objects
 		 board.Draw(default_shader, camera);
 		 for (auto pawn : white_pawns)

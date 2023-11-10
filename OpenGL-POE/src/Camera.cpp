@@ -22,6 +22,9 @@ void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
 
 	// Sets new camera matrix
 	camMatrix = projectionMatrix * viewMatrix;
+	//Log the position of the camera
+	std::cout << "Camera Position: " << Position.x << ", " << Position.y << ", " << Position.z << std::endl;
+	std::cout << "Camera Orientation: " << Orientation.x << ", " << Orientation.y << ", " << Orientation.z << std::endl;
 }
 
 void Camera::Matrix(Shader& shader, const char* uniform)
@@ -31,11 +34,19 @@ void Camera::Matrix(Shader& shader, const char* uniform)
 }
 
 
-void Camera::Inputs(GLFWwindow* window)
+void Camera::Inputs(GLFWwindow* window, bool camLocked)
 {
 	//You Can then disable mouse inputs when its not needed.
-	HandleKeyInputs(window);
-	HandleMouseInputs(window);
+	if(!camLocked)
+	{
+		HandleKeyInputs(window);
+		HandleMouseInputs(window);
+	}
+	else
+	{
+		HandleCycle(window);
+	}
+	
 }
 void Camera::HandleMouseInputs(GLFWwindow* window)
 {
@@ -121,4 +132,38 @@ void Camera::HandleKeyInputs(GLFWwindow* window)
 	{
 		speed = 0.1f;
 	}
+}
+void Camera::HandleCycle(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		MoveTo(cam_coords[0]);
+	}if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		MoveTo(cam_coords[1]);
+	}if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		MoveTo(cam_coords[2]);
+	}
+}
+void Camera::MoveTo(const CamCoords& coords)
+{
+	// Calculate the new orientation to point towards the target position
+	//glm::vec3 newOrientation = glm::normalize(targetPosition - Position);
+	// Log this new orientation
+	//std::cout << "New Orientation: " << newOrientation.x << ", " << newOrientation.y << ", " << newOrientation.z << std::endl;
+	
+	// Calculate the new up vector based on the current up vector
+	// glm::vec3 newUp = glm::normalize(glm::cross(newOrientation, glm::cross(Orientation, Up)));
+
+	// Set the new orientation and up vectors*
+	//Orientation = newOrientation;
+	//Up = newUp;
+
+	// Set the camera position to the target position
+	Position = coords.Position;
+	Orientation = coords.Orientation;
+
+	// Update the view matrix to reflect the changes
+	//viewMatrix = glm::lookAt(Position, Position + Orientation, Up);
+
+	// Recalculate the camera matrix
+	//camMatrix = projectionMatrix * viewMatrix;
 }
