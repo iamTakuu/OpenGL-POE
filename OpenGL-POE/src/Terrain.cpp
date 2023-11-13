@@ -3,8 +3,7 @@
 Terrain::Terrain(const char* heightMap)
 {
    
-    m_texture = Texture("Textures/rocks.png", "", 0, GL_RGB,
-                        GL_UNSIGNED_BYTE);
+    m_texture = Texture("Textures/rocks.png", "", 0);
     m_data = stbi_load(heightMap, &m_width, &m_height, &m_nrChannels, 0);
     if (m_data)
     {

@@ -4,8 +4,7 @@ King::King(const KingProps& properties, bool isWhite)
 {
   
     //verticalCube = Cube(m_texture);
-    m_texture = Texture(isWhite ? "Textures/white-piece.png" : "Textures/black-piece.png", "", 0, GL_RGBA,
-                        GL_UNSIGNED_BYTE);
+    m_texture = Texture(isWhite ? "Textures/white-piece.png" : "Textures/black-piece.png", "", 0);
 
     horizontalCube = Cube(2.0f, 1.0f, 1.0f, m_texture);
     verticalCube = Cube(1.0f, 2.0f, 1.0f, m_texture);
