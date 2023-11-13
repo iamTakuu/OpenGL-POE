@@ -119,10 +119,11 @@ int main()
 		return -1;
 
 	Shader default_shader = Shader("Shaders/default.vert", "Shaders/default.frag");
-
-	// Take care of all the light related things
+	
+	// Take care of all the light related things.
+	// You can change the type of light in the shader
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 5.5f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 10.5f, 0.5f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 

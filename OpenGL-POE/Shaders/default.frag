@@ -21,9 +21,7 @@ uniform vec3 lightPos;
 uniform vec3 camPos;
 
 
-
-
-void main()
+vec4 pointLight()
 {
 	// ambient lighting
 	float ambient = 0.20f;
@@ -33,9 +31,61 @@ void main()
 	vec3 lightDirection = normalize(lightPos - crntPos);
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 
-	// No specular lighting, so remove the specular calculations
-	float specular = 0.0;
+	// specular lighting
+	vec3 viewDirection = normalize(camPos - crntPos);
+	vec3 reflectDirection = reflect(-lightDirection, normal);
+	float specular = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
 
 	// outputs final color
-	FragColor = texture(tex0, texCoord) * (diffuse + ambient) * lightColor;
+	return texture(tex0, texCoord) * (diffuse + ambient + specular) * lightColor;
+}
+vec4 spotLight()
+{
+	// controls how big the area that is lit up is
+	float outerCone = 0.90f;
+	float innerCone = 0.95f;
+
+	// ambient lighting
+	float ambient = 0.20f;
+
+	// diffuse lighting
+	vec3 normal = normalize(Normal);
+	vec3 lightDirection = normalize(lightPos - crntPos);
+	float diffuse = max(dot(normal, lightDirection), 0.0f);
+
+	// No specular texture, so remove the specular texture sampling and calculations
+	float specular = 0.0;
+
+	// calculates the intensity of the crntPos based on its angle to the center of the light cone
+	float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDirection);
+	float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
+
+	return (texture(tex0, texCoord) * (diffuse * inten + ambient)) * lightColor;
+}
+
+vec4 directionalLight()
+{
+	// ambient lighting
+	float ambient = 0.20f;
+
+	// diffuse lighting
+	vec3 normal = normalize(Normal);
+	vec3 lightDirection = normalize(-lightPos); // Negate the light direction for a directional light
+	float diffuse = max(dot(normal, lightDirection), 0.0f);
+
+	// specular lighting
+	vec3 viewDirection = normalize(camPos - crntPos);
+	vec3 reflectDirection = reflect(-lightDirection, normal);
+	float specular = pow(max(dot(viewDirection, reflectDirection), 0.0f), 32);
+
+	// outputs final color
+	return texture(tex0, texCoord) * (diffuse + ambient + specular) * lightColor;
+}
+
+void main()
+{
+	// outputs final color
+	//FragColor = directionalLight();
+	FragColor = spotLight();
+	//FragColor = pointLight();
 }
