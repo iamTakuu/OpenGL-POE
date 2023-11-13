@@ -878,6 +878,8 @@
     <None Include="Shaders\default.vert" />
     <None Include="Shaders\height.frag" />
     <None Include="Shaders\height.vert" />
+    <None Include="Shaders\Skybox.frag" />
+    <None Include="Shaders\Skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\pop_cat.png" />
