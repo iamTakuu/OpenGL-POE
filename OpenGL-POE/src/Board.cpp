@@ -3,9 +3,9 @@
 Board::Board(GLuint count)
 {
 
-	Texture whiteTexture = Texture("Textures/white.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
-	Texture blackTexture = Texture("Textures/black.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
-	Texture boarderTexture = Texture("Textures/boarder.png", "", 0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture whiteTexture = Texture("Textures/white.png", "", 0);
+	Texture blackTexture = Texture("Textures/black.png", "", 0);
+	Texture boarderTexture = Texture("Textures/boarder.png", "", 0);
 	
 	m_transform.setLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 

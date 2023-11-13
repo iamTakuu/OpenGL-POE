@@ -2,8 +2,7 @@
 
 Knight::Knight(const KnightProps& properties, bool isWhite)
 {
-    m_texture = Texture(isWhite ? "Textures/white-piece.png" : "Textures/black-piece.png", "", 0, GL_RGBA,
-                        GL_UNSIGNED_BYTE);
+    m_texture = Texture(isWhite ? "Textures/white-piece.png" : "Textures/black-piece.png", "", 0);
 
     
     // top_cylinder = Cylinder(properties.cyTopHeight, properties.cyTopRadius, properties.cyTopRadius,
