@@ -21,6 +21,11 @@ const unsigned int height = 720;
 GLFWwindow* window;
 // Used to Lock/Unlock the camera using the TAB key
 bool camLocked = true;
+// Change the type of light in the shader
+// 0 = Directional
+// 1 = Spot
+// 2 = Point
+int light_type = 2;
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -35,10 +40,8 @@ void processInput(GLFWwindow *window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
 		camLocked = !camLocked;
-	}
-	
+	}	
 }
-
 
 bool InitWindow()
 {
@@ -74,7 +77,7 @@ bool InitWindow()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////		Test for Skybox		/////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float skyboxVerticies[] =
+float skybox_vertices[] =
 {
 	//Skybox coordinates
 	-1.0, -1.0, 1.0,//
@@ -87,7 +90,7 @@ float skyboxVerticies[] =
 	-1.0, 1.0, -1.0,//
 };
 
-unsigned int skyboxIndecies[] =
+unsigned int skybox_indices[] =
 {
 	//Right
 	1,2,6,
@@ -130,6 +133,7 @@ int main()
 	default_shader.Activate();
 	glUniform4f(glGetUniformLocation(default_shader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(default_shader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform1i(glGetUniformLocation(default_shader.ID, "lightingType"), light_type);
 	
 
 	Shader skybox_Shader = Shader("Shaders/Skybox.vert", "Shaders/Skybox.frag");
@@ -140,8 +144,6 @@ int main()
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 80.0f));
-	//camera.initMatrix(20.0f, 0.1f, 150.0f);
-	//camera.rotateMatrix(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 #pragma region PIECE PROPERTIES
 	PawnProps pawn_props =
@@ -231,12 +233,6 @@ int main()
 		black_pawns[i].setScale(glm::vec3(0.6f, 0.6f, 0.6f));
 		black_pawns[i].setPosition(glm::vec3(-4.5f + (1.28f * i), 1.3f, -4.4f));
 	}
-
-	//TODO: Create a vector with all the other pieces || Or just manually create each piece for now
-	//****** Good Starting Position ********
-	//pawn.setPosition(glm::vec3(-4.4f, 1.3f, 3.0f));
-	
-	//CamCoords coords{glm::vec3(42.6f, 40.0f, 47.0f), glm::vec3(-0.57f, -0.52f, -0.64f)};
 
 #pragma region PIECE CREATION
 	Rook rookWhiteOne(rook_props, true);
@@ -332,9 +328,9 @@ int main()
 	glGenBuffers(1, &skyboxEBO);
 	glBindVertexArray(skyboxVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVerticies), &skyboxVerticies, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skybox_vertices), &skybox_vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(skyboxIndecies), &skyboxIndecies, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(skybox_indices), &skybox_indices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

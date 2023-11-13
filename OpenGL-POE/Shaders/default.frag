@@ -20,6 +20,9 @@ uniform vec3 lightPos;
 // Gets the position of the camera from the main function
 uniform vec3 camPos;
 
+// Uniform to control the type of lighting (0 for directional, 1 for spot, 2 for point)
+uniform int lightingType;
+
 
 vec4 pointLight()
 {
@@ -84,8 +87,15 @@ vec4 directionalLight()
 
 void main()
 {
-	// outputs final color
-	//FragColor = directionalLight();
-	FragColor = spotLight();
-	//FragColor = pointLight();
+	// outputs final color based on the selected lighting type
+	if (lightingType == 0) {
+		FragColor = directionalLight();
+	} else if (lightingType == 1) {
+		FragColor = spotLight();
+	} else if (lightingType == 2) {
+		FragColor = pointLight();
+	} else {
+		// Default to spotLight if an invalid lighting type is provided
+		FragColor = spotLight();
+	}
 }
