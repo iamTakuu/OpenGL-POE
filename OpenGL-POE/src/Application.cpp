@@ -59,6 +59,7 @@ bool InitWindow()
 		return true;
 	}
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval( 0 );
 	// Initialize GLEW
 	if (glewInit() != GLEW_OK) {
 		std::cerr << "Failed to initialize GLEW." << std::endl;
@@ -77,6 +78,18 @@ int main()
 		return -1;
 
 	Shader default_shader = Shader("Shaders/default.vert", "Shaders/default.frag");
+
+	// Take care of all the light related things
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 5.5f, 0.5f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, lightPos);
+
+	default_shader.Activate();
+	glUniform4f(glGetUniformLocation(default_shader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(default_shader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+
+	
 	Board board(64);
 	
 	// Enable depth test

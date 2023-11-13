@@ -11,10 +11,10 @@ struct Vertex
 	glm::vec3 Position;
 	// Color
 	glm::vec3 Color;
-	// Normal ... we'll get to this later.
-	//glm::vec3 Normal;
 	// TexCoords
 	glm::vec2 TexCoords;
+	// Normal ... we'll get to this later.
+	glm::vec3 Normal;
 };
 
 // Vertex Buffer Object
