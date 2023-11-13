@@ -181,6 +181,10 @@
     <None Include="Shaders\height.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\Skybox.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\Skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\pop_cat.png">
