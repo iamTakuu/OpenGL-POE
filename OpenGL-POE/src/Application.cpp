@@ -15,6 +15,7 @@
 #include "../Headers/Pawn.h"
 #include "../Headers/Queen.h"
 
+
 // Window dimensions
 const unsigned width = 1280;
 const unsigned int height = 720;
@@ -25,7 +26,7 @@ bool camLocked = true;
 // 0 = Directional
 // 1 = Spot
 // 2 = Point
-int light_type = 2;
+int light_type = 1;
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
