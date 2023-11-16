@@ -963,6 +963,8 @@
     <Image Include="Textures\pop_cat.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Models\Knight.obj" />
+    <Content Include="Models\Queen.obj" />
     <Content Include="Models\Rook.obj" />
     <Content Include="Textures\rocks.png" />
     <Content Include="Textures\terrain.png" />
