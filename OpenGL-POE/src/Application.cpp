@@ -11,6 +11,7 @@
 #include "../Headers/Board.h"
 #include "../Headers/King.h"
 #include "../Headers/Knight.h"
+#include "../Headers/Model.h"
 #include "../Headers/Terrain.h"
 #include "../Headers/Pawn.h"
 #include "../Headers/Queen.h"
@@ -26,7 +27,7 @@ bool camLocked = true;
 // 0 = Directional
 // 1 = Spot
 // 2 = Point
-int light_type = 1;
+int light_type = 2;
 
 // Callback function to resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -127,7 +128,7 @@ int main()
 	// Take care of all the light related things.
 	// You can change the type of light in the shader
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 10.5f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 5.0f, -5.5f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
@@ -303,8 +304,12 @@ int main()
 	
 	Terrain terrain("Textures/terrain.png");
 	terrain.transform.setLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	terrain.transform.setLocalPosition(glm::vec3(0.0f, -6.0f, 0.0f));
-
+	terrain.transform.setLocalPosition(glm::vec3(0.0f, -4.5f, 0.0f));
+	
+	Model testModel ("Models/Rook.obj");
+	testModel.transform.setLocalPosition( glm::vec3(0.0f, 2.0f, 0.0f));
+	testModel.transform.setLocalRotation( glm::vec3(30.0f, 0.0f, -20.0f));
+	//testModel.transform.setLocalScale(glm::vec3( 2.0f, 2.0f, 2.0f));
 	IMGUI_CHECKVERSION();
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -389,7 +394,6 @@ int main()
 
 	skybox_Shader.Activate();
 	glUniform1i(glGetUniformLocation(skybox_Shader.ID, "skybox"), 0);
-	
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////		Test for Skybox		/////////////////////////////////////////////////////////////////////////////////
@@ -428,49 +432,54 @@ int main()
 		
 		camera.updateMatrix(20.0f, 0.1f, 200.0f);
 		camera.Inputs(window, camLocked);
-		
-		// For loop to render all the Pawn objects
+
+		testModel.Draw(default_shader, camera);
+
+// 		// For loop to render all the Pawn objects
 		 board.Draw(default_shader, camera);
-		 for (auto pawn : white_pawns)
-		 {
-		 	pawn.Render(default_shader, camera);
-		 }
-		 for (auto pawn : black_pawns)
-		 {
-		 	pawn.Render(default_shader, camera);
-		 }
+
+ 		 for (auto pawn : white_pawns)
+ 		 {
+ 		 	pawn.Render(default_shader, camera);
+ 		 }
+ 		 for (auto pawn : black_pawns)
+ 		 {
+ 		 	pawn.Render(default_shader, camera);
+ 		 }
 
 
-		
-#pragma region RENDERING
-		 //Render rooks
-		 rookWhiteOne.Render(default_shader, camera);
-		rookWhiteTwo.Render(default_shader, camera);
-		rookBlackOne.Render(default_shader, camera);
-		rookBlackTwo.Render(default_shader, camera);
-		
-		//Render knights
-		knightWhiteOne.Render(default_shader, camera);
-		knightWhiteTwo.Render(default_shader, camera);
-		knightBlackOne.Render(default_shader, camera);
-		knightBlackTwo.Render(default_shader, camera);
-		
-		//Render bishops
-		bishopBlackOne.Render(default_shader, camera);
-		bishopBlackTwo.Render(default_shader, camera);
-		bishopWhiteOne.Render(default_shader, camera);
-		bishopWhiteTwo.Render(default_shader, camera);
-		
-		//Render kings
-		kingBlack.Render(default_shader, camera);
-		kingWhite.Render(default_shader, camera);
-		
-		//Render queens
-		queenBlack.Render(default_shader, camera);
-		queenWhite.Render(default_shader, camera);
-		
-		//Render terrain
-		terrain.Render(default_shader, camera);
+ 		
+ #pragma region RENDERING
+ 		 //Render rooks
+		rookWhiteOne.Render(default_shader, camera);
+ 		rookWhiteTwo.Render(default_shader, camera);
+ 		rookBlackOne.Render(default_shader, camera);
+ 		rookBlackTwo.Render(default_shader, camera);
+ 		
+ 		//Render knights
+ 		knightWhiteOne.Render(default_shader, camera);
+ 		knightWhiteTwo.Render(default_shader, camera);
+ 		knightBlackOne.Render(default_shader, camera);
+ 		knightBlackTwo.Render(default_shader, camera);
+ 		
+ 		//Render bishops
+ 		bishopBlackOne.Render(default_shader, camera);
+ 		bishopBlackTwo.Render(default_shader, camera);
+ 		bishopWhiteOne.Render(default_shader, camera);
+ 		bishopWhiteTwo.Render(default_shader, camera);
+ 		
+ 		//Render kings
+ 		kingBlack.Render(default_shader, camera);
+ 		kingWhite.Render(default_shader, camera);
+ 		
+ 		//Render queens
+ 		queenBlack.Render(default_shader, camera);
+ 		queenWhite.Render(default_shader, camera);
+ 		
+ 		//Render terrain
+ 		terrain.Render(default_shader, camera);
+
+
 #pragma endregion
 
 		
@@ -498,7 +507,8 @@ int main()
 
 		// Switch back to the normal depth function
 		glDepthFunc(GL_LESS);
-
+			
+	
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////		Test for Skybox		/////////////////////////////////////////////////////////////////////////////////

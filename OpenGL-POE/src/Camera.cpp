@@ -23,8 +23,8 @@ void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
 	// Sets new camera matrix
 	camMatrix = projectionMatrix * viewMatrix;
 	//Log the position of the camera
-	std::cout << "Camera Position: " << Position.x << ", " << Position.y << ", " << Position.z << std::endl;
-	std::cout << "Camera Orientation: " << Orientation.x << ", " << Orientation.y << ", " << Orientation.z << std::endl;
+	//std::cout << "Camera Position: " << Position.x << ", " << Position.y << ", " << Position.z << std::endl;
+	//std::cout << "Camera Orientation: " << Orientation.x << ", " << Orientation.y << ", " << Orientation.z << std::endl;
 }
 
 void Camera::Matrix(Shader& shader, const char* uniform)

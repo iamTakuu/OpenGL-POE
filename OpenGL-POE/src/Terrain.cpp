@@ -25,6 +25,9 @@ void Terrain::setVertices()
     const float yShift = 16.0f;
     //int rez = 1;
     const unsigned bytePerPixel = m_nrChannels;
+
+    // Clear any existing vertices
+    m_vertices.clear();
     for (int i = 0; i < m_height; i++)
     {
         for (int j = 0; j < m_width; j++)
@@ -41,6 +44,21 @@ void Terrain::setVertices()
             vertex.Color = glm::vec3(1.0f, 1.0f, 1.0f);
             vertex.TexCoords.x = j / (float)(m_width - 1);
             vertex.TexCoords.y = i / (float)(m_height - 1);
+            //calculateNormals();
+            // Calculate normals
+            // Calculate normals using Perlin noise gradient
+            if (i > 0 && j > 0)
+            {
+                glm::vec3 v1 = m_vertices.back().Position;
+                glm::vec3 v2 = m_vertices[m_vertices.size() - m_width].Position;
+                glm::vec3 v3 = m_vertices[m_vertices.size() - 1].Position;
+
+                glm::vec3 normal = glm::triangleNormal(v1, v2, v3);
+
+                // Assign normals to the current vertex
+                vertex.Normal = glm::normalize(normal);
+            }
+
 
             m_vertices.push_back(vertex);
         }
@@ -62,6 +80,35 @@ void Terrain::setIndices()
             m_indices.push_back(j + m_width * (i + 1));
             m_indices.push_back(j + 1 + m_width * (i + 1));
         }
+    }
+}
+void Terrain::calculateNormals()
+{
+    for (unsigned i = 0; i < m_indices.size(); i += 3)
+    {
+        unsigned int index1 = m_indices[i];
+        unsigned int index2 = m_indices[i + 1];
+        unsigned int index3 = m_indices[i + 2];
+
+        glm::vec3 v1 = m_vertices[index1].Position;
+        glm::vec3 v2 = m_vertices[index2].Position;
+        glm::vec3 v3 = m_vertices[index3].Position;
+
+        glm::vec3 edge1 = v2 - v1;
+        glm::vec3 edge2 = v3 - v1;
+
+        glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
+
+        // Assign normals to vertices
+        m_vertices[index1].Normal += normal;
+        m_vertices[index2].Normal += normal;
+        m_vertices[index3].Normal += normal;
+    }
+
+    // Normalize normals
+    for (unsigned i = 0; i < m_vertices.size(); ++i)
+    {
+        m_vertices[i].Normal = glm::normalize(m_vertices[i].Normal);
     }
 }
 

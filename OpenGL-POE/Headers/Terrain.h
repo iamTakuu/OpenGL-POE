@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include "Mesh.h" 
 #include "Transform.h"
+#include <glm/gtx/normal.hpp> 
 
 
 class Terrain
@@ -26,6 +27,7 @@ private:
 	
 	void setVertices();
 	void setIndices();
+	void calculateNormals();
 	void SetupMesh();
 	
 };

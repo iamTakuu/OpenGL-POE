@@ -10,6 +10,7 @@ Sphere::Sphere(GLfloat radius, GLint sectorCount, GLint stackCount, const Textur
 
 	setVertices();
 	setIndices();
+    //calculateNormals();
     SetupMesh();
 }
 
@@ -53,6 +54,42 @@ void Sphere::setIndices()
         m_indices.push_back(i + sectorCount + 1);
         m_indices.push_back(i);
         m_indices.push_back(i + 1);
+    }
+}
+void Sphere::calculateNormals()
+{
+    // Initialize normals to zero
+    for (unsigned i = 0; i < m_vertices.size(); ++i)
+    {
+        m_vertices[i].Normal = glm::vec3(0.0f);
+    }
+
+    // Calculate normals
+    for (int i = 0; i < m_indices.size(); i += 3)
+    {
+        unsigned int index1 = m_indices[i];
+        unsigned int index2 = m_indices[i + 1];
+        unsigned int index3 = m_indices[i + 2];
+
+        glm::vec3 v1 = m_vertices[index1].Position;
+        glm::vec3 v2 = m_vertices[index2].Position;
+        glm::vec3 v3 = m_vertices[index3].Position;
+
+        glm::vec3 edge1 = v2 - v1;
+        glm::vec3 edge2 = v3 - v1;
+
+        glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
+
+        // Accumulate normals for each vertex
+        m_vertices[index1].Normal += normal;
+        m_vertices[index2].Normal += normal;
+        m_vertices[index3].Normal += normal;
+    }
+
+    // Normalize all normals
+    for (unsigned i = 0; i < m_vertices.size(); ++i)
+    {
+        m_vertices[i].Normal = glm::normalize(m_vertices[i].Normal);
     }
 }
 

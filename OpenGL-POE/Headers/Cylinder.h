@@ -29,6 +29,7 @@ private:
     
     void setVertices();
     void setIndices();
+    void calculateNormals();
     void SetupMesh();
     
 };
